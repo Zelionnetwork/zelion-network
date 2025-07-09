@@ -1,0 +1,23 @@
+{
+  "name": "zylithium-chain",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@chainlink/contracts-ccip": "^1.5.0",
+    "@nomicfoundation/hardhat-toolbox": "^6.0.0",
+    "dotenv": "^17.0.1",
+    "hardhat": "^2.25.0"
+  },
+  "dependencies": {
+    "@chainlink/contracts": "github:smartcontractkit/chainlink",
+    "@openzeppelin/contracts": "^4.9.3",
+    "@openzeppelin/contracts-upgradeable": "^4.9.3"
+  }
+}
