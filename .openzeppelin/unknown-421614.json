@@ -1,0 +1,273 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0x4BF604788476Dd7552e8cB26e85b9A806c32d403",
+      "txHash": "0xedad748520a01d75db04bea534f5c3daabca78d1442bf994746c0d0a3c2009cb",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xDD16d2C5849AB94c0e90B91C91f7F484211d917E",
+      "txHash": "0xf91c27f9d28b6ffd5e8b079882289c9858c3651f8af5d9013c3892bb4847a0fa",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xFbE7f5882194014cBF2864E9e4e4D1DFA381D730",
+      "txHash": "0x4e8800807bbb1121eea7f51a8275bcc0b797f97e64f126056ca5a3c61a602c0e",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x90f454fae2b26294Ec70FBaB29BD8622039B0571",
+      "txHash": "0xb44dd702dd3aab4ef3c3b979b87810154068e5bb78de6fb5e376997f89a73b2d",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x933103BE5cd416223b05397cff2a66Df21fB4604",
+      "txHash": "0xcb4d0e633549c5a02b94f55ade45adc2a1b45dd67e1ed29d5bf7092213851ce7",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xB1939c29Bc10cB919aD04526fED4916Db261Ef87",
+      "txHash": "0x040f0f5822d71ad076090dd08d216360d451a7af096f2a37e53dadc63bf98cd8",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x70A48070C306f3FeE4fBeAcbcBFD89BA4F7fE06c",
+      "txHash": "0x0c390554ca11ec8385a3e673cf46cefe0514cd89961b2c26b8dbc41d81b0249e",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xA85D76F5Ee4f1cF51717E6Ea876A3B133CD64cc7",
+      "txHash": "0x9ba4bcb3be1833cd5f519fec25e684796c857cef1f3d3aa440ca69057751358c",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x563a6Eefea0d405cC57c5c871eAC7D9eC1762e81",
+      "txHash": "0x8ae1fad46bfb5eb822e4e96422a855d798a1b06f53d600360d969d8160000bae",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x05F6e33D8e979D57c4d01a3F86Bb34cD52C363fa",
+      "txHash": "0x2c118f4b964ace1651f99a62f8f2e898f6b29cc68ae5983f1b2f5ec83e2345db",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xDD552C0d469Cc955c33f25eDBa420bbd7C989778",
+      "txHash": "0xe1ae2aa416417dcf1b0de4a3b813b873696336176d6d73700f6aa06a10d8a85e",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "4141be1f34edf78df37d9fc7c315d53868c75557f60633faa213e329c0c07996": {
+      "address": "0x80b7ea9A8dbd509f799B1B85D223A0d51b1DcEBC",
+      "txHash": "0x99f2a7beb5482037a1232199bbb275584b8c9b7d2e81be4de791707d035968f9",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:40"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:88"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\PausableUpgradeable.sol:116"
+          },
+          {
+            "label": "tokenConfigs",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_address,t_struct(TokenConfig)6429_storage)",
+            "contract": "ZelionBridge",
+            "src": "contracts\\ZelionBridge.sol:27"
+          },
+          {
+            "label": "executedMessages",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "ZelionBridge",
+            "src": "contracts\\ZelionBridge.sol:28"
+          },
+          {
+            "label": "trustedBridges",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_uint64,t_address)",
+            "contract": "ZelionBridge",
+            "src": "contracts\\ZelionBridge.sol:29"
+          },
+          {
+            "label": "chainGasLimits",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_uint64,t_uint256)",
+            "contract": "ZelionBridge",
+            "src": "contracts\\ZelionBridge.sol:30"
+          },
+          {
+            "label": "baseFeeBuffer",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_uint256",
+            "contract": "ZelionBridge",
+            "src": "contracts\\ZelionBridge.sol:31"
+          },
+          {
+            "label": "s_router",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_address",
+            "contract": "ZelionBridge",
+            "src": "contracts\\ZelionBridge.sol:32"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(TokenConfig)6429_storage)": {
+            "label": "mapping(address => struct ZelionBridge.TokenConfig)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_address)": {
+            "label": "mapping(uint64 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_uint256)": {
+            "label": "mapping(uint64 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(TokenConfig)6429_storage": {
+            "label": "struct ZelionBridge.TokenConfig",
+            "members": [
+              {
+                "label": "isSupported",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "isBurnable",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "destToken",
+                "type": "t_address",
+                "offset": 2,
+                "slot": "0"
+              },
+              {
+                "label": "destinationChainSelector",
+                "type": "t_uint64",
+                "offset": 22,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {}
+      }
+    }
+  }
+}

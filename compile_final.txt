@@ -1,0 +1,50 @@
+[dotenv@17.0.1] injecting env (0) from .env – [tip] encrypt with dotenvx: https://dotenvx.com
+[31m[1mError[22m[39m [31m[1mHH404:[22m[39m File @chainlink/contracts-ccip/src/v0.8/ccip/applications/CCIPReceiver.sol, imported from contracts/ChainlinkTest.sol, not found.
+
+HardhatError: HH404: File @chainlink/contracts-ccip/src/v0.8/ccip/applications/CCIPReceiver.sol, imported from contracts/ChainlinkTest.sol, not found.
+    at Resolver.resolveImport (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:221:17)
+    at C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\dependencyGraph.ts:188:28
+    at async Promise.all (index 0)
+    at DependencyGraph._addDependenciesFrom (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\dependencyGraph.ts:186:5)
+    at async Promise.all (index 2)
+    at Function.createFromResolvedFiles (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\dependencyGraph.ts:15:5)
+    at Environment._runTaskDefinition (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\core\runtime-environment.ts:351:14)
+    at Environment.run (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\core\runtime-environment.ts:184:14)
+    at SimpleTaskDefinition.action (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\builtin-tasks\compile.ts:1393:58)
+    at Environment._runTaskDefinition (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\core\runtime-environment.ts:351:14)
+
+    Caused by: HardhatError: HH402: File @chainlink/contracts-ccip/src/v0.8/ccip/applications/CCIPReceiver.sol doesn't exist.
+        at Resolver._validateSourceNameExistenceAndCasing (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:537:15)
+        at Resolver._resolveLibrarySourceName (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:354:7)
+        at Resolver.resolveSourceName (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:103:22)
+        at Resolver.resolveImport (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:194:24)
+        at C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\dependencyGraph.ts:188:28
+        at async Promise.all (index 0)
+        at DependencyGraph._addDependenciesFrom (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\dependencyGraph.ts:186:5)
+        at async Promise.all (index 2)
+        at Function.createFromResolvedFiles (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\dependencyGraph.ts:15:5)
+        at Environment._runTaskDefinition (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\core\runtime-environment.ts:351:14)
+    
+        Caused by: HardhatError: HH1005: Solidity source file @chainlink/contracts-ccip/src/v0.8/ccip/applications/CCIPReceiver.sol not found
+            at getSourceNameTrueCase (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\utils\source-names.ts:219:13)
+            at validateSourceNameExistenceAndCasing (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\utils\source-names.ts:102:30)
+            at Resolver._validateSourceNameExistenceAndCasing (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:529:7)
+            at Resolver._resolveLibrarySourceName (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:354:7)
+            at Resolver.resolveSourceName (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:103:22)
+            at Resolver.resolveImport (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:194:24)
+            at C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\dependencyGraph.ts:188:28
+            at async Promise.all (index 0)
+            at DependencyGraph._addDependenciesFrom (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\dependencyGraph.ts:186:5)
+            at async Promise.all (index 2)
+        
+            Caused by: FileNotFoundError: File C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\@chainlink\contracts-ccip\src\v0.8\ccip\applications\CCIPReceiver.sol not found
+                at getFileTrueCase (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\util\fs-utils.ts:152:9)
+                at getFileTrueCase (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\util\fs-utils.ts:143:9)
+                at getFileTrueCase (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\util\fs-utils.ts:143:9)
+                at getSourceNameTrueCase (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\utils\source-names.ts:215:22)
+                at validateSourceNameExistenceAndCasing (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\utils\source-names.ts:102:30)
+                at Resolver._validateSourceNameExistenceAndCasing (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:529:7)
+                at Resolver._resolveLibrarySourceName (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:354:7)
+                at Resolver.resolveSourceName (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:103:22)
+                at Resolver.resolveImport (C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\resolver.ts:194:24)
+                at C:\Users\nanda\Downloads\zelion\zelion-network\node_modules\hardhat\src\internal\solidity\dependencyGraph.ts:188:28

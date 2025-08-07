@@ -1,26 +1,43 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("@nomicfoundation/hardhat-verify");
-require("dotenv").config(); // ✅ Loads .env
+require("dotenv").config();
+require("@openzeppelin/hardhat-upgrades");
 
-const { PRIVATE_KEY } = process.env;
+const {
+  PRIVATE_KEY,
+  ARBITRUM_SEPOLIA_RPC_URL,
+  POLYGON_AMOY_RPC_URL,
+  ARBITRUM_ONE_RPC_URL,
+  BNB_RPC_URL,
+  ARBISCAN_API_KEY,
+  POLYGONSCAN_API_KEY,
+  BNBSCAN_API_KEY
+} = process.env;
 
-// ✅ Validates and formats your private key
-const accounts =
-  PRIVATE_KEY && PRIVATE_KEY.startsWith("0x") && PRIVATE_KEY.length === 64
-    ? [`0x${PRIVATE_KEY}`]
-    : PRIVATE_KEY && PRIVATE_KEY.startsWith("0x") && PRIVATE_KEY.length === 66
-    ? [PRIVATE_KEY]
-    : [];
+const accounts = PRIVATE_KEY ? [PRIVATE_KEY] : [];
 
 module.exports = {
   solidity: {
-    version: "0.8.20",
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200,
+    compilers: [
+      {
+        version: "0.8.20",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
       },
-    },
+      {
+        version: "0.8.19",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+    ],
   },
   networks: {
     hardhat: {
@@ -30,24 +47,22 @@ module.exports = {
       url: "http://127.0.0.1:8545",
     },
     arbitrumSepolia: {
-      url: process.env.ARBITRUM_SEPOLIA_RPC_URL || "",
+      url: ARBITRUM_SEPOLIA_RPC_URL || "",
       accounts,
       chainId: 421614,
-      gasPrice: 1000000000,
     },
     polygonAmoy: {
-      url: process.env.POLYGON_AMOY_RPC_URL || "",
+      url: POLYGON_AMOY_RPC_URL || "",
       accounts,
       chainId: 80002,
-      gasPrice: 1000000000,
     },
     arbitrumOne: {
-      url: process.env.ARBITRUM_ONE_RPC_URL || "",
+      url: ARBITRUM_ONE_RPC_URL || "",
       accounts,
       chainId: 42161,
     },
     bscMainnet: {
-      url: process.env.BNB_RPC_URL || "",
+      url: BNB_RPC_URL || "",
       accounts,
       chainId: 56,
       gasPrice: 20000000000,
@@ -89,6 +104,14 @@ module.exports = {
         urls: {
           apiURL: "https://api-testnet.bscscan.com/api",
           browserURL: "https://testnet.bscscan.com",
+        },
+      },
+      {
+        network: "polygonAmoy",
+        chainId: 80002,
+        urls: {
+          apiURL: "https://api-amoy.polygonscan.com/api",
+          browserURL: "https://amoy.polygonscan.com/",
         },
       },
     ],

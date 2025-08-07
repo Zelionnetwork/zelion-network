@@ -3,21 +3,38 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx hardhat test",
+    "test:coverage": "npx hardhat coverage",
+    "compile": "npx hardhat compile",
+    "deploy": "npx hardhat run scripts/deploy.js",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.js --network sepolia",
+    "deploy:arbitrum-sepolia": "npx hardhat run scripts/deploy-arbitrum-sepolia.js --network arbitrumSepolia",
+    "deploy:polygon-amoy": "npx hardhat run scripts/deploy-polygon-amoy.js --network polygonAmoy",
+    "deploy:arbitrum-one": "npx hardhat run scripts/deploy-arbitrum-one.js --network arbitrumOne",
+    "deploy:bnb": "npx hardhat run scripts/deploy-bnb.js --network bscMainnet",
+    "deploy:bridge": "npx hardhat run scripts/deployBridge.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@chainlink/contracts-ccip": "^1.5.0",
+    "@chainlink/contracts-ccip": "^1.6.0",
     "@nomicfoundation/hardhat-toolbox": "^6.0.0",
+    "@openzeppelin/hardhat-upgrades": "^3.9.1",
     "dotenv": "^17.0.1",
-    "hardhat": "^2.25.0"
+    "hardhat": "^2.25.0",
+    "solidity-coverage": "^0.8.5"
   },
   "dependencies": {
-    "@chainlink/contracts": "github:smartcontractkit/chainlink",
-    "@openzeppelin/contracts": "^4.9.3",
-    "@openzeppelin/contracts-upgradeable": "^4.9.3"
+    "@chainlink/contracts": "^0.8.0",
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "@fortawesome/react-fontawesome": "^0.2.3",
+    "@openzeppelin/contracts": "^4.9.6",
+    "@openzeppelin/contracts-upgradeable": "^4.9.6",
+    "react-circular-progressbar": "^2.2.0",
+    "react-router-dom": "^7.7.1",
+    "react-toastify": "^11.0.5",
+    "solc": "^0.8.20"
   }
 }

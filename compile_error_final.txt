@@ -1,0 +1,213 @@
+﻿[dotenv@17.2.1] injecting env (12) from .env -- tip: ≡ƒôí observe env with Radar: https://dotenvx.com/radar
+node.exe : 
+[31m[1mError[22m[39m 
+[31m[1mHH606:[22m[39m 
+The project cannot be 
+compiled, see reasons below.
+At C:\Users\nanda\AppData\Ro
+aming\npm\npx.ps1:24 char:5
++     & "node$exe"  "$basedi
+r/node_modules/npm/bin/npx-c
+li.js" $args
++     ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo          
+    : NotSpecified: ([31m  
+  [1mError... reasons b   
+ elow.:String) [], Remot    
+eException
+    + FullyQualifiedErrorId 
+    : NativeCommandError
+ 
+
+The Solidity version pragma 
+statement in these files 
+doesn't match any of the 
+configured compilers in 
+your config. Change the 
+pragma or configure 
+additional compiler 
+versions in your hardhat 
+config.
+
+  * 
+contracts/TestBridge.sol 
+(^0.8.20)
+  * contracts/TestUpgradeabl
+e.sol (^0.8.20)
+  * 
+contracts/TestImports.sol 
+(^0.8.20)
+  * contracts/ZYLToken.sol 
+(^0.8.20)
+  * contracts/TestERC20.sol 
+(^0.8.20)
+  * contracts/OZTest.sol 
+(^0.8.20)
+  * contracts/interfaces/IZY
+LToken.sol (^0.8.20)
+  * 
+contracts/SimpleBridge.sol 
+(^0.8.20)
+  * 
+contracts/ImportTest.sol 
+(^0.8.20)
+  * 
+contracts/MinimalBridge.sol 
+(^0.8.20)
+  * 
+contracts/ChainlinkTest.sol 
+(^0.8.20)
+  * 
+contracts/SimpleTest.sol 
+(^0.8.20)
+
+These files and its 
+dependencies cannot be 
+compiled with your config. 
+This can happen because 
+they have incompatible 
+Solidity pragmas, or don't 
+match any of your 
+configured Solidity 
+compilers.
+
+  * contracts/Bridge.sol
+
+  * 
+contracts/ZelionBridge.sol
+  * contracts/BridgeV2.sol
+
+To learn more, run the 
+command again with --verbose
+
+Read about compiler 
+configuration at 
+https://hardhat.org/config
+
+HardhatError: HH606: The 
+project cannot be compiled, 
+see reasons below.
+
+The Solidity version pragma 
+statement in these files 
+doesn't match any of the 
+configured compilers in 
+your config. Change the 
+pragma or configure 
+additional compiler 
+versions in your hardhat 
+config.
+
+  * 
+contracts/TestBridge.sol 
+(^0.8.20)
+  * contracts/TestUpgradeabl
+e.sol (^0.8.20)
+  * 
+contracts/TestImports.sol 
+(^0.8.20)
+  * contracts/ZYLToken.sol 
+(^0.8.20)
+  * contracts/TestERC20.sol 
+(^0.8.20)
+  * contracts/OZTest.sol 
+(^0.8.20)
+  * contracts/interfaces/IZY
+LToken.sol (^0.8.20)
+  * 
+contracts/SimpleBridge.sol 
+(^0.8.20)
+  * 
+contracts/ImportTest.sol 
+(^0.8.20)
+  * 
+contracts/MinimalBridge.sol 
+(^0.8.20)
+  * 
+contracts/ChainlinkTest.sol 
+(^0.8.20)
+  * 
+contracts/SimpleTest.sol 
+(^0.8.20)
+
+These files and its 
+dependencies cannot be 
+compiled with your config. 
+This can happen because 
+they have incompatible 
+Solidity pragmas, or don't 
+match any of your 
+configured Solidity 
+compilers.
+
+  * contracts/Bridge.sol
+  * 
+contracts/ZelionBridge.sol
+  * contracts/BridgeV2.sol
+
+To learn more, run the 
+command again with --verbose
+
+Read about compiler 
+configuration at 
+https://hardhat.org/config
+
+    at 
+SimpleTaskDefinition.action 
+(C:\Users\nanda\Downloads\ze
+lion\zelion-network\node_mod
+ules\hardhat\src\builtin-tas
+ks\compile.ts:1093:15)
+    at Environment._runTaskD
+efinition (C:\Users\nanda\Do
+wnloads\zelion\zelion-networ
+k\node_modules\hardhat\src\i
+nternal\core\runtime-environ
+ment.ts:351:14)
+    at Environment.run (C:\U
+sers\nanda\Downloads\zelion\
+zelion-network\node_modules\
+hardhat\src\internal\core\ru
+ntime-environment.ts:184:14)
+    at 
+SimpleTaskDefinition.action 
+(C:\Users\nanda\Downloads\ze
+lion\zelion-network\node_mod
+ules\hardhat\src\builtin-tas
+ks\compile.ts:1415:7)
+    at Environment._runTaskD
+efinition (C:\Users\nanda\Do
+wnloads\zelion\zelion-networ
+k\node_modules\hardhat\src\i
+nternal\core\runtime-environ
+ment.ts:351:14)
+    at Environment.run (C:\U
+sers\nanda\Downloads\zelion\
+zelion-network\node_modules\
+hardhat\src\internal\core\ru
+ntime-environment.ts:184:14)
+    at 
+SimpleTaskDefinition.action 
+(C:\Users\nanda\Downloads\ze
+lion\zelion-network\node_mod
+ules\hardhat\src\builtin-tas
+ks\compile.ts:1513:7)
+    at Environment._runTaskD
+efinition (C:\Users\nanda\Do
+wnloads\zelion\zelion-networ
+k\node_modules\hardhat\src\i
+nternal\core\runtime-environ
+ment.ts:351:14)
+    at OverriddenTaskDefinit
+ion._action (C:\Users\nanda\
+Downloads\zelion\zelion-netw
+ork\node_modules\@typechain\
+hardhat\src\index.ts:23:5)
+    at Environment._runTaskD
+efinition (C:\Users\nanda\Do
+wnloads\zelion\zelion-networ
+k\node_modules\hardhat\src\i
+nternal\core\runtime-environ
+ment.ts:351:14)
