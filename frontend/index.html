@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zelion Network - Stress Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Zelion Network Stress Test</h1>
+            <p>A simple tool to test the ZYLToken contract under load.</p>
+        </header>
+        <div class="card">
+            <div id="wallet-info">
+                <p>Status: <span id="status">Disconnected</span></p>
+                <p>Account: <span id="account">N/A</span></p>
+                <p>Chain ID: <span id="chain">N/A</span></p>
+            </div>
+            <button id="connectButton">Connect Wallet</button>
+        </div>
+        <div class="card" id="test-controls" style="display: none;">
+            <h2>Test Controls</h2>
+            <div class="form-group">
+                <label for="tx-count">Number of Transactions:</label>
+                <input type="number" id="tx-count" value="10" min="1" max="1000">
+            </div>
+            <button id="startButton">Start Stress Test</button>
+        </div>
+        <div class="card">
+            <h2>Logs</h2>
+            <div id="log-output"></div>
+        </div>
+    </div>
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+# Zelion Network - Security Audit Scope
+
+**Date:** 2025-08-07
+
+This document outlines the scope and necessary information for the security audit of the Zelion Network's smart contracts.
+
+---
+
+## 1. Commit for Audit
+
+The audit should be performed on the following Git commit hash from the `main` branch of the repository. This ensures the exact deployed code is being reviewed.
+
+- **Repository:** https://github.com/Zelionnetwork/zelion-network
+- **Commit Hash:** `560a97a52e48dc652d187a44e94ee34a3e912201`
+
+---
+
+## 2. Scope of Contracts
+
+The audit should focus on the core production contracts. Test contracts, examples, and deprecated versions are explicitly out of scope.
+
+### In-Scope Contracts (High Priority):
+
+1.  **`contracts/ZelionBridge.sol`**
+    - **Description:** The main upgradeable bridge contract handling the core cross-chain logic.
+    - **Areas of Focus:** Upgradeability mechanism (proxy pattern), owner privileges, token locking/burning logic, fee management, and interaction with the Chainlink CCIP router.
+
+2.  **`contracts/ZYLToken.sol`**
+    - **Description:** The primary ERC20 token for the network.
+    - **Areas of Focus:** Role-based access control (especially `BRIDGE_ROLE`), `burn` and `mint` functions, and overall compliance with the ERC20 standard.
+
+### In-Scope Contracts (Medium Priority):
+
+3.  **`contracts/Bridge.sol`**
+    - **Description:** The base contract inherited by `ZelionBridge.sol`.
+    - **Areas of Focus:** The `_ccipReceive` function, security modifiers (`onlyOwner`, `whenNotPaused`, `nonReentrant`), and event emissions.
+
+4.  **`contracts/overrides/CCIPReceiver.sol`**
+    - **Description:** A local override of a core Chainlink contract.
+    - **Areas of Focus:** Correct implementation of the `CCIPReceiver` interface and secure handling of incoming cross-chain messages.
+
+### Out-of-Scope Contracts:
+
+All other contracts within the `contracts/` directory are considered out of scope for this audit. This includes, but is not limited to:
+- `TestBridge.sol`
+- `SimpleBridge.sol`
+- `CrossChainTransfer.sol`
+- All other files ending in `Test.sol` or `Testnet.sol`.
+
+---
+
+## 3. Additional Information & Suggestions for Auditors
+
+To facilitate a smooth and comprehensive audit, please consider the following:
+
+1.  **System Architecture:** A high-level diagram showing the interaction between the `ZelionBridge`, `ZYLToken`, and the Chainlink CCIP router should be provided to understand the data flow.
+
+2.  **Owner Privileges:** A clear list of all owner-restricted functions should be documented and reviewed for potential security risks. Key functions include `setChainGasLimit`, `pause`, and `unpause`.
+
+3.  **Upgrade Process:** The process and authority for upgrading the `ZelionBridge` contract should be clearly defined and reviewed.
+
+4.  **Deployment Details:** The deployment information, including the deployed contract addresses on the Arbitrum Sepolia network, can be found in the `deployments/arbitrumSepolia.json` file (from the specified commit).
+
+---
