@@ -34,7 +34,7 @@ export default function Hero() {
       <div className="shader-overlay" />
 
       {/* 🧊 Spline 3D Orb */}
-      <div className="absolute inset-0 scale-[1.05] w-full h-full z-[1]">
+      {/* <div className="absolute inset-0 scale-[1.05] w-full h-full z-[1]">
         <iframe
           src="https://my.spline.design/reactiveorb-oo9h0nSlpuw6rqVUteGcjoPM"
           frameBorder="0"
@@ -43,7 +43,7 @@ export default function Hero() {
           decoding="async"
           className="w-full h-full"
         ></iframe>
-      </div>
+      </div> */}
 
       {/* 🚀 Hero Content */}
       <motion.div

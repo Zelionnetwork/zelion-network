@@ -1,7 +1,7 @@
 'use client';
 
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
+// import Hero from './components/Hero';
 import Features from './components/Features';
 import CallToAction from './components/CallToAction';
 import StatsSection from './components/StatsSection';
@@ -16,7 +16,7 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <Hero />
+      {/* <Hero /> */}
       <Features />
       <CallToAction />
       <StatsSection />
