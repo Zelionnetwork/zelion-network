@@ -1,56 +1,162 @@
-# Zelion Network MVP
+# 🌉 Zelion Network - Cross-Chain Bridge
 
-Zelion Network is a cross-chain interoperability platform built on the Ethereum Virtual Machine (EVM) with support for Chainlink CCIP. This repository contains the smart contracts, frontend, and deployment scripts for the Minimum Viable Product (MVP) of the Zelion Network.
+**Live Application**: https://zelion-bridge.windsurf.build
 
-> 🔐 Secure. 🔁 Cross-Chain Ready. ⚙️ DeFi Functionality.
+Zelion Network is a production-ready cross-chain interoperability platform built with Chainlink CCIP integration. Our bridge enables seamless token transfers across multiple EVM-compatible networks with accurate fee estimation and optimized user experience.
 
----
+> 🔐 **Secure** • 🌉 **Cross-Chain Ready** • ⚡ **Production Deployed** • 🧪 **Community Tested**
 
-## 🚀 MVP Features
+## 🚀 **Live Cross-Chain Bridge Features**
 
-1. **Cross-Chain Interoperability**
-   - Full integration with Arbitrum network
-   - Chainlink CCIP support for cross-chain token transfers
-   - Secure bridge contract with multi-token support
+✅ **Multi-Chain Support**
+- **Arbitrum Sepolia** ↔ **Polygon Amoy** ↔ **Avalanche Fuji**
+- Real-time cross-chain token transfers
+- Accurate fee estimation (~$0.06-0.09 per transfer)
 
-2. **DeFi Functionality**
-   - Token swapping interface with AMM-style functionality
-   - Staking dashboard with flexible and locked staking options
-   - Real-time price feeds for tokens
+✅ **Smart Token Management**
+- ZYL (Zelion Token) and CCIP-BnM test token support
+- Intelligent approval management (skips redundant approvals)
+- Multi-token architecture ready for expansion
 
-3. **Security & Privacy**
-   - Robust smart contract security using OpenZeppelin standards
-   - Comprehensive audit checklist and documentation
-   - Confidential transaction research for future enhancements
-   - No collection of Personally Identifiable Information (PII)
-
-4. **User Interface**
-   - Intuitive React-based frontend
-   - Integration with popular Web3 wallets
-   - Dashboards for wallet balances, staking positions, and transaction history
-   - Error handling and informative feedback
+✅ **Production-Ready UX**
+- Wallet integration (MetaMask, WalletConnect, etc.)
+- Real-time balance updates and transaction status
+- Comprehensive error handling and user feedback
+- Responsive design for all devices
 
 ---
 
-## 📁 Repository Structure
+## 🎯 **Quick Start - Try the Bridge Now!**
+
+1. **Visit**: https://zelion-bridge.windsurf.build
+2. **Connect Wallet**: Use MetaMask or any Web3 wallet
+3. **Switch to Arbitrum Sepolia**: Add testnet if needed
+4. **Get Test Tokens**: 
+   - ZYL tokens: Use our minting interface
+   - CCIP-BnM: Use Chainlink faucet
+5. **Bridge Tokens**: Select destination chain and amount
+6. **Confirm Transaction**: Approve and execute the bridge
+
+## 🏗️ **Architecture & Technology**
+
+**🔗 Chainlink CCIP Integration**
+- Native CCIP router integration for secure cross-chain messaging
+- Support for CCIP-whitelisted tokens (CCIP-BnM for testing)
+- Accurate fee estimation using Chainlink's getFee() function
+
+**⚡ Smart Contract Stack**
+- CrossChainTransfer.sol: Main bridge contract
+- ZYLToken.sol: Native ERC-20 token with minting capabilities
+- OpenZeppelin security standards and access controls
+- Comprehensive error handling and event logging
+
+**🎨 Frontend Technology**
+- Next.js 15 with React 19 for modern web experience
+- Wagmi + RainbowKit for seamless wallet integration
+- Ethers.js and Viem for blockchain interactions
+- Tailwind CSS for responsive, beautiful UI
+
+## 📋 **Deployed Contract Addresses**
+
+### **Arbitrum Sepolia Testnet**
+- **CrossChainTransfer**: `0x9197F8E2e13B67701B2fFb32C13Cc49c4916d7D4`
+- **ZYL Token**: `0xEAccd130B812f8b7D8C4404bb08c0Ff82F5B6890`
+- **CCIP-BnM Test Token**: `0xA8C0c11bf64AF62CDCA6f93D3769B88BdD7cb93D`
+- **Chainlink Router**: `0x2a9C5afB0d0e4BAb2BCdaE109EC4b0c4Be15a165`
+
+### **Chain Selectors**
+- **Arbitrum Sepolia**: `3478487238524512106`
+- **Polygon Amoy**: `16281711391670634445`
+- **Avalanche Fuji**: `14767482510784806043`
+
+## 🛠️ **Development Setup**
+
+```bash
+# Clone the repository
+git clone https://github.com/Zelionnetwork/zelion-network.git
+cd zelion-network
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Add your private key and RPC URLs
+
+# Deploy contracts (if needed)
+npx hardhat run scripts/deploy.js --network arbitrum-sepolia
+
+# Start frontend development
+cd zelion-site
+npm install
+npm run dev
+```
+
+## 📁 **Repository Structure**
 
 ```bash
 zelion-network/
 ├── contracts/                    # Smart contracts
+│   ├── CrossChainTransfer.sol    # Main bridge contract
 │   ├── ZYLToken.sol              # Native ERC-20 Token (ZYL)
-│   ├── Bridge.sol                # Main cross-chain bridge contract
 │   ├── interfaces/               # Contract interfaces
-│   └── ...                       # Additional contracts and tests
-├── frontend/                     # React frontend application
-│   ├── src/
-│   │   ├── components/           # UI components (Swap, Staking, etc.)
-│   │   ├── services/             # Backend integration services
-│   │   └── ...
-│   └── __tests__/                # Frontend test suite
-├── test/                         # Smart contract test suite
+│   └── test/                     # Contract tests
+├── zelion-site/                  # Next.js frontend application
+│   ├── src/app/
+│   │   ├── components/           # UI components (Bridge, Dashboard, etc.)
+│   │   ├── services/             # Blockchain integration services
+│   │   ├── hooks/                # Custom React hooks
+│   │   └── abi/                  # Contract ABIs
+│   └── public/                   # Static assets
+├── scripts/                      # Deployment and utility scripts
+└── test/                         # Smart contract test suite
 ├── scripts/                      # Deployment and utility scripts
 ├── hardhat.config.js             # Hardhat configuration
-├── package.json                  # Project dependencies
+└── package.json                  # Project dependencies
+```
+
+## 🧪 **Testing & Validation**
+
+The bridge has been thoroughly tested with:
+
+- **End-to-End Bridge Flows**: Complete token transfers across all supported chains
+- **Fee Estimation Accuracy**: Validated ~$0.06-0.09 costs for cross-chain transfers  
+- **Approval Optimization**: Smart allowance checking to minimize user transactions
+- **Error Handling**: Comprehensive testing of edge cases and failure scenarios
+- **Multi-Token Support**: Validated with both ZYL and CCIP-BnM test tokens
+
+## 🚀 **Recent Improvements**
+
+- ✅ **Fixed Fee Estimation**: Resolved frontend crashes and display issues
+- ✅ **Optimized Approvals**: Smart allowance checking prevents redundant transactions
+- ✅ **Enhanced UX**: Better error handling and user feedback
+- ✅ **Multi-Token Support**: Dynamic token selection with CCIP indicators
+- ✅ **Production Deployment**: Live application ready for community testing
+
+## 🤝 **Contributing**
+
+We welcome contributions! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 **Links**
+
+- **Live Bridge**: https://zelion-bridge.windsurf.build
+- **GitHub**: https://github.com/Zelionnetwork/zelion-network
+- **Documentation**: Coming soon
+- **Community**: Join our Discord (link coming soon)
+
+---
+
+**Built with ❤️ by the Zelion Network Team**
 ├── AUDIT_CHECKLIST.md            # Security audit preparation
 ├── CONFIDENTIAL_TRANSACTIONS_RESEARCH.md  # Privacy research
 └── README.md                     # You're here
