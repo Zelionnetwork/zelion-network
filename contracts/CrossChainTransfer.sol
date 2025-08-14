@@ -83,5 +83,28 @@ contract CrossChainTransfer is Ownable {
         require(success, "Transfer failed");
     }
 
+    function getFeeForTransfer(
+        address receiver,
+        uint256 amount
+    ) external view returns (uint256) {
+        Client.EVMTokenAmount[] memory tokenAmounts = new Client.EVMTokenAmount[](1);
+        tokenAmounts[0] = Client.EVMTokenAmount({
+            token: address(token),
+            amount: amount
+        });
+
+        Client.EVM2AnyMessage memory message = Client.EVM2AnyMessage({
+            receiver: abi.encode(receiver),
+            data: "0x", // No specific data needed for fee estimation
+            tokenAmounts: tokenAmounts,
+            extraArgs: Client._argsToBytes(
+                Client.EVMExtraArgsV1({gasLimit: 500000})
+            ),
+            feeToken: address(0)
+        });
+
+        return router.getFee(destinationChainSelector, message);
+    }
+
     receive() external payable {}
 }

@@ -1,7 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("@nomicfoundation/hardhat-verify");
-require("dotenv").config();
 require("@openzeppelin/hardhat-upgrades");
+require("dotenv").config();
 
 const {
   PRIVATE_KEY,
@@ -11,25 +10,20 @@ const {
   BNB_RPC_URL,
   ARBISCAN_API_KEY,
   POLYGONSCAN_API_KEY,
-  BNBSCAN_API_KEY
 } = process.env;
 
 const accounts = PRIVATE_KEY ? [PRIVATE_KEY] : [];
 
+if (accounts.length === 0) {
+  console.warn("\n[WARNING] No private key found. Please ensure PRIVATE_KEY is set in your .env file.\n");
+}
+
+/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.20",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
-          },
-        },
-      },
-      {
-        version: "0.8.19",
+        version: '0.8.20',
         settings: {
           optimizer: {
             enabled: true,
@@ -46,9 +40,9 @@ module.exports = {
     localhost: {
       url: "http://127.0.0.1:8545",
     },
-    arbitrumSepolia: {
+    "arbitrum-sepolia": {
       url: ARBITRUM_SEPOLIA_RPC_URL || "",
-      accounts,
+      accounts: accounts,
       chainId: 421614,
     },
     polygonAmoy: {
@@ -67,54 +61,34 @@ module.exports = {
       chainId: 56,
       gasPrice: 20000000000,
     },
-    bscTestnet: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      accounts,
-      chainId: 97,
-      gasPrice: 20000000000,
-    },
+  },
+  sourcify: {
+    enabled: true
   },
   etherscan: {
     apiKey: {
-      arbitrumOne: process.env.ARBISCAN_API_KEY || "",
-      arbitrumSepolia: process.env.ARBISCAN_API_KEY || "",
-      polygonAmoy: process.env.POLYGONSCAN_API_KEY || "",
-      bscMainnet: process.env.BNBSCAN_API_KEY || "",
+      "arbitrum-sepolia": ARBISCAN_API_KEY,
+      polygonAmoy: POLYGONSCAN_API_KEY,
+      arbitrumOne: ARBISCAN_API_KEY
     },
     customChains: [
       {
-        network: "arbitrumSepolia",
+        network: "arbitrum-sepolia",
         chainId: 421614,
         urls: {
           apiURL: "https://api-sepolia.arbiscan.io/api",
-          browserURL: "https://sepolia.arbiscan.io/",
-        },
-      },
-      {
-        network: "bscMainnet",
-        chainId: 56,
-        urls: {
-          apiURL: "https://api.bscscan.com/api",
-          browserURL: "https://bscscan.com",
-        },
-      },
-      {
-        network: "bscTestnet",
-        chainId: 97,
-        urls: {
-          apiURL: "https://api-testnet.bscscan.com/api",
-          browserURL: "https://testnet.bscscan.com",
-        },
+          browserURL: "https://sepolia.arbiscan.io/"
+        }
       },
       {
         network: "polygonAmoy",
         chainId: 80002,
         urls: {
           apiURL: "https://api-amoy.polygonscan.com/api",
-          browserURL: "https://amoy.polygonscan.com/",
-        },
-      },
-    ],
+          browserURL: "https://amoy.polygonscan.com/"
+        }
+      }
+    ]
   },
   gasReporter: {
     enabled: true,

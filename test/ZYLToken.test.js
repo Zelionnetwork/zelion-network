@@ -11,7 +11,6 @@ describe("ZYLToken", function () {
     
     const ZYLToken = await ethers.getContractFactory("ZYLToken");
     token = await ZYLToken.deploy();
-    await token.deployed();
     
     BRIDGE_ROLE = await token.BRIDGE_ROLE();
     PAUSER_ROLE = await token.PAUSER_ROLE();
@@ -29,7 +28,7 @@ describe("ZYLToken", function () {
 
     it("Should set the correct max supply", async function () {
       const maxSupply = await token.MAX_SUPPLY();
-      expect(maxSupply).to.equal(ethers.utils.parseEther("1000000000")); // 1 billion tokens
+      expect(maxSupply).to.equal(ethers.parseEther("1000000000")); // 1 billion tokens
     });
 
     it("Should grant roles to deployer", async function () {
@@ -41,26 +40,26 @@ describe("ZYLToken", function () {
 
   describe("Minting", function () {
     it("Should allow bridge to mint tokens", async function () {
-      const amount = ethers.utils.parseEther("100");
+      const amount = ethers.parseEther("100");
       await token.connect(bridge).mint(user1.address, amount);
       expect(await token.balanceOf(user1.address)).to.equal(amount);
     });
 
     it("Should fail when non-bridge tries to mint", async function () {
-      const amount = ethers.utils.parseEther("100");
+      const amount = ethers.parseEther("100");
       await expect(token.connect(user1).mint(user1.address, amount))
-        .to.be.revertedWith("AccessControl");
+        .to.be.revertedWith(/AccessControl/);
     });
 
     it("Should fail when minting exceeds max supply", async function () {
       const maxSupply = await token.MAX_SUPPLY();
-      await expect(token.connect(bridge).mint(user1.address, maxSupply.add(1)))
+      await expect(token.connect(bridge).mint(user1.address, maxSupply + 1n))
         .to.be.revertedWith("Max supply exceeded");
     });
 
     it("Should fail when minting while paused", async function () {
       await token.pause();
-      const amount = ethers.utils.parseEther("100");
+      const amount = ethers.parseEther("100");
       await expect(token.connect(bridge).mint(user1.address, amount))
         .to.be.revertedWith("Pausable: paused");
     });
@@ -69,22 +68,22 @@ describe("ZYLToken", function () {
   describe("Burning", function () {
     beforeEach(async function () {
       // Mint some tokens to user1
-      const amount = ethers.utils.parseEther("1000");
+      const amount = ethers.parseEther("1000");
       await token.connect(bridge).mint(user1.address, amount);
     });
 
     it("Should allow user to burn their own tokens", async function () {
-      const burnAmount = ethers.utils.parseEther("100");
+      const burnAmount = ethers.parseEther("100");
       const initialBalance = await token.balanceOf(user1.address);
       
       await token.connect(user1).burn(burnAmount);
       
       const finalBalance = await token.balanceOf(user1.address);
-      expect(finalBalance).to.equal(initialBalance.sub(burnAmount));
+      expect(finalBalance).to.equal(initialBalance - burnAmount);
     });
 
     it("Should allow bridge to burn from user account with approval", async function () {
-      const burnAmount = ethers.utils.parseEther("100");
+      const burnAmount = ethers.parseEther("100");
       const initialBalance = await token.balanceOf(user1.address);
       
       // User approves bridge to spend tokens
@@ -94,11 +93,11 @@ describe("ZYLToken", function () {
       await token.connect(bridge).burnFrom(user1.address, burnAmount);
       
       const finalBalance = await token.balanceOf(user1.address);
-      expect(finalBalance).to.equal(initialBalance.sub(burnAmount));
+      expect(finalBalance).to.equal(initialBalance - burnAmount);
     });
 
     it("Should fail when bridge burns without approval", async function () {
-      const burnAmount = ethers.utils.parseEther("100");
+      const burnAmount = ethers.parseEther("100");
       await expect(token.connect(bridge).burnFrom(user1.address, burnAmount))
         .to.be.revertedWith("ERC20: insufficient allowance");
     });
@@ -107,12 +106,12 @@ describe("ZYLToken", function () {
   describe("Transfers", function () {
     beforeEach(async function () {
       // Mint some tokens to user1
-      const amount = ethers.utils.parseEther("1000");
+      const amount = ethers.parseEther("1000");
       await token.connect(bridge).mint(user1.address, amount);
     });
 
     it("Should allow normal transfers", async function () {
-      const transferAmount = ethers.utils.parseEther("100");
+      const transferAmount = ethers.parseEther("100");
       const initialBalance1 = await token.balanceOf(user1.address);
       const initialBalance2 = await token.balanceOf(user2.address);
       
@@ -121,19 +120,19 @@ describe("ZYLToken", function () {
       const finalBalance1 = await token.balanceOf(user1.address);
       const finalBalance2 = await token.balanceOf(user2.address);
       
-      expect(finalBalance1).to.equal(initialBalance1.sub(transferAmount));
-      expect(finalBalance2).to.equal(initialBalance2.add(transferAmount));
+      expect(finalBalance1).to.equal(initialBalance1 - transferAmount);
+      expect(finalBalance2).to.equal(initialBalance2 + transferAmount);
     });
 
     it("Should fail when transferring while paused", async function () {
       await token.pause();
-      const transferAmount = ethers.utils.parseEther("100");
+      const transferAmount = ethers.parseEther("100");
       await expect(token.connect(user1).transfer(user2.address, transferAmount))
         .to.be.revertedWith("Pausable: paused");
     });
 
     it("Should allow approved transfers", async function () {
-      const transferAmount = ethers.utils.parseEther("100");
+      const transferAmount = ethers.parseEther("100");
       const initialBalance1 = await token.balanceOf(user1.address);
       const initialBalance2 = await token.balanceOf(user2.address);
       
@@ -146,13 +145,13 @@ describe("ZYLToken", function () {
       const finalBalance1 = await token.balanceOf(user1.address);
       const finalBalance2 = await token.balanceOf(user2.address);
       
-      expect(finalBalance1).to.equal(initialBalance1.sub(transferAmount));
-      expect(finalBalance2).to.equal(initialBalance2.add(transferAmount));
+      expect(finalBalance1).to.equal(initialBalance1 - transferAmount);
+      expect(finalBalance2).to.equal(initialBalance2 + transferAmount);
     });
 
     it("Should fail approved transfers when paused", async function () {
       await token.pause();
-      const transferAmount = ethers.utils.parseEther("100");
+      const transferAmount = ethers.parseEther("100");
       
       // User1 approves user2 to spend tokens
       await token.connect(user1).approve(user2.address, transferAmount);
@@ -174,13 +173,13 @@ describe("ZYLToken", function () {
 
     it("Should fail to pause by non-pauser", async function () {
       await expect(token.connect(user1).pause())
-        .to.be.revertedWith("AccessControl");
+        .to.be.revertedWith(/AccessControl/);
     });
 
     it("Should fail to unpause by non-pauser", async function () {
       await token.pause();
       await expect(token.connect(user1).unpause())
-        .to.be.revertedWith("AccessControl");
+        .to.be.revertedWith(/AccessControl/);
     });
   });
 
@@ -188,8 +187,8 @@ describe("ZYLToken", function () {
     it("Should allow admin to withdraw ETH", async function () {
       // Send some ETH to token contract
       await owner.sendTransaction({
-        to: token.address,
-        value: ethers.utils.parseEther("1")
+        to: token.target,
+        value: ethers.parseEther("1")
       });
       
       const initialBalance = await ethers.provider.getBalance(user2.address);
@@ -214,14 +213,14 @@ describe("ZYLToken", function () {
     });
 
     it("Should fail to update admin to zero address", async function () {
-      await expect(token.updateAdmin(ethers.constants.AddressZero))
+      await expect(token.updateAdmin(ethers.ZeroAddress))
         .to.be.revertedWith("Invalid admin address");
     });
   });
 
   describe("Supply Tracking", function () {
     it("Should track circulating supply correctly", async function () {
-      const mintAmount = ethers.utils.parseEther("1000");
+      const mintAmount = ethers.parseEther("1000");
       await token.connect(bridge).mint(user1.address, mintAmount);
       
       const circulatingSupply = await token.circulatingSupply();

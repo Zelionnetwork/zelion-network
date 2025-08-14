@@ -12,28 +12,26 @@ describe("ZelionBridge", function () {
     // Deploy token
     const ZYLToken = await ethers.getContractFactory("ZYLToken");
     token = await ZYLToken.deploy();
-    await token.deployed();
     
     // Deploy bridge
     const ZelionBridge = await ethers.getContractFactory("ZelionBridge");
     bridge = await upgrades.deployProxy(ZelionBridge, [owner.address]);
-    await bridge.deployed();
     
     // Configure token in bridge
     await bridge.configureToken(
-      token.address,
+      token.target,
       true,  // isSupported
       true,  // isBurnable
-      token.address,  // destToken
+      token.target,  // destToken
       0       // destChain
     );
     
     // Grant BRIDGE_ROLE to bridge
     const BRIDGE_ROLE = await token.BRIDGE_ROLE();
-    await token.grantRole(BRIDGE_ROLE, bridge.address);
+    await token.grantRole(BRIDGE_ROLE, bridge.target);
     
     // Mint some tokens to user1 for testing
-    await token.mint(user1.address, ethers.utils.parseEther("1000"));
+    await token.mint(user1.address, ethers.parseEther("1000"));
   });
 
   describe("Deployment", function () {
@@ -48,10 +46,10 @@ describe("ZelionBridge", function () {
 
   describe("Token Configuration", function () {
     it("Should configure token correctly", async function () {
-      const config = await bridge.tokenConfigs(token.address);
+      const config = await bridge.tokenConfigs(token.target);
       expect(config.isSupported).to.be.true;
       expect(config.isBurnable).to.be.true;
-      expect(config.destToken).to.equal(token.address);
+      expect(config.destToken).to.equal(token.target);
       expect(config.destChain).to.equal(0);
     });
 
@@ -71,44 +69,44 @@ describe("ZelionBridge", function () {
       await expect(bridge.bridgeTokens(
         0,
         user2.address,
-        ethers.utils.parseEther("1"),
-        { value: ethers.utils.parseEther("0.1") }
+        ethers.parseEther("1"),
+        { value: ethers.parseEther("0.1") }
       )).to.be.revertedWith("Token not supported");
     });
 
     it("Should fail to bridge with zero amount", async function () {
       await expect(bridge.connect(user1).bridgeTokens(
         0,
-        token.address,
+        token.target,
         0,
-        { value: ethers.utils.parseEther("0.1") }
+        { value: ethers.parseEther("0.1") }
       )).to.be.revertedWith("Invalid amount");
     });
 
     it("Should fail to bridge with zero token address", async function () {
       await expect(bridge.connect(user1).bridgeTokens(
         0,
-        ethers.constants.AddressZero,
-        ethers.utils.parseEther("1"),
-        { value: ethers.utils.parseEther("0.1") }
+        ethers.ZeroAddress,
+        ethers.parseEther("1"),
+        { value: ethers.parseEther("0.1") }
       )).to.be.revertedWith("Invalid token");
     });
 
     it("Should fail with insufficient fee", async function () {
       await expect(bridge.connect(user1).bridgeTokens(
         0,
-        token.address,
-        ethers.utils.parseEther("1"),
+        token.target,
+        ethers.parseEther("1"),
         { value: 0 }
       )).to.be.revertedWith("Insufficient fee");
     });
 
     it("Should allow bridging tokens with sufficient fee", async function () {
-      const amount = ethers.utils.parseEther("10");
-      const fee = ethers.utils.parseEther("0.1");
+      const amount = ethers.parseEther("10");
+      const fee = ethers.parseEther("0.1");
       
       // Approve bridge to spend tokens
-      await token.connect(user1).approve(bridge.address, amount);
+      await token.connect(user1).approve(bridge.target, amount);
       
       // Check initial balance
       const initialBalance = await token.balanceOf(user1.address);
@@ -116,14 +114,14 @@ describe("ZelionBridge", function () {
       // Bridge tokens
       await expect(bridge.connect(user1).bridgeTokens(
         0,
-        token.address,
+        token.target,
         amount,
         { value: fee }
       )).to.emit(bridge, "TokensBridged");
       
       // Check final balance
       const finalBalance = await token.balanceOf(user1.address);
-      expect(finalBalance).to.equal(initialBalance.sub(amount));
+      expect(finalBalance).to.equal(initialBalance - amount);
     });
   });
 
@@ -139,14 +137,14 @@ describe("ZelionBridge", function () {
     it("Should prevent bridging when paused", async function () {
       await bridge.pauseBridge();
       
-      const amount = ethers.utils.parseEther("10");
-      const fee = ethers.utils.parseEther("0.1");
+      const amount = ethers.parseEther("10");
+      const fee = ethers.parseEther("0.1");
       
-      await token.connect(user1).approve(bridge.address, amount);
+      await token.connect(user1).approve(bridge.target, amount);
       
       await expect(bridge.connect(user1).bridgeTokens(
         0,
-        token.address,
+        token.target,
         amount,
         { value: fee }
       )).to.be.revertedWith("Pausable: paused");
@@ -155,7 +153,7 @@ describe("ZelionBridge", function () {
 
   describe("Fee Management", function () {
     it("Should estimate bridge fee correctly", async function () {
-      const estimatedFee = await bridge.estimateBridgeFee(0, token.address, ethers.utils.parseEther("1"));
+      const estimatedFee = await bridge.estimateBridgeFee(0, token.target, ethers.parseEther("1"));
       expect(estimatedFee).to.be.gt(0);
     });
 
@@ -184,8 +182,8 @@ describe("ZelionBridge", function () {
     it("Should withdraw ETH", async function () {
       // Send some ETH to bridge
       await owner.sendTransaction({
-        to: bridge.address,
-        value: ethers.utils.parseEther("1")
+        to: bridge.target,
+        value: ethers.parseEther("1")
       });
       
       const initialBalance = await ethers.provider.getBalance(user2.address);

@@ -1,0 +1,36 @@
+# ZYL Token Mainnet Launch Plan
+
+This plan outlines the three phases required to successfully deploy the `ZYL` token to a mainnet, verify it, and make it tradable. The recommended mainnet is **Arbitrum One** since we have been working on its testnet.
+
+## Phase 1: Pre-Launch Preparation (Complete)
+
+This phase focuses on preparing all the necessary code and configurations for a smooth deployment.
+
+- **[x] Create a Robust Deployment Script:**
+  - A clean, focused `scripts/deploy.js` has been created.
+
+- **[x] Configure Hardhat for Mainnet & Verification:**
+  - The `hardhat.config.js` file has been updated to support Arbitrum One deployment and verification.
+
+## Phase 2: Go-Live (Pending Your Action)
+
+This is the deployment phase, where the token officially becomes a mainnet asset.
+
+- **[ ] Secure Mainnet RPC & Fund Your Wallet:**
+  - **ACTION REQUIRED:** You must add your `ARBITRUM_ONE_RPC_URL` and `ARBISCAN_API_KEY` to the `.env` file and fund your deployer wallet with ETH on the Arbitrum One network.
+
+- **[ ] Execute Deployment:**
+  - Once you have funded your wallet, I will run the deployment script.
+
+- **[ ] Verify Contract on Arbiscan:**
+  - After deployment, I will run the verification task to publish the source code.
+
+## Phase 3: Post-Launch & Liquidity
+
+This is the final and most critical phase to make your token tradable.
+
+- **[ ] Mint the Initial Supply:**
+  - We will use a minting script to create the initial tokens needed for the liquidity pool.
+
+- **[ ] Provide Liquidity on a DEX:**
+  - You will need to create a liquidity pool (e.g., `ZYL / ETH`) on a DEX like Uniswap or Camelot. This is what makes the token tradable and sets its initial price.
