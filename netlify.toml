@@ -1,12 +1,8 @@
 [build]
-  command = "cd frontend && npm install && npm run build"
-  publish = "frontend/.next"
+  command = "cp -r ../zelion-site/* . && npm install && npm run build"
+  publish = "out"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-[dev]
-  framework = "next"
-  targetPort = 3000
