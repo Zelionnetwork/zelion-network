@@ -1,10 +1,17 @@
 # 🌉 Zelion Network - Cross-Chain Bridge
 
-**Live Application**: https://zelion-bridge.windsurf.build
+**Live Application**: https://zelion-bridge-v2.windsurf.build
 
 Zelion Network is a production-ready cross-chain interoperability platform built with Chainlink CCIP integration. Our bridge enables seamless token transfers across multiple EVM-compatible networks with accurate fee estimation and optimized user experience.
 
 > 🔐 **Secure** • 🌉 **Cross-Chain Ready** • ⚡ **Production Deployed** • 🧪 **Community Tested**
+
+## 🎉 Latest Updates (December 2024)
+
+- **✅ Fee Buffer Optimization**: Implemented 50% fee buffer for reliable CCIP transactions
+- **✅ ZelionBridgeV3 Deployed**: Message-only architecture for non-whitelisted tokens
+- **✅ Frontend Enhanced**: Dynamic imports, improved error handling, token faucet integration
+- **✅ Public Testing Ready**: Bridge fully operational on Arbitrum Sepolia
 
 ## 🚀 **Live Cross-Chain Bridge Features**
 
@@ -37,18 +44,19 @@ Zelion Network is a production-ready cross-chain interoperability platform built
 5. **Bridge Tokens**: Select destination chain and amount
 6. **Confirm Transaction**: Approve and execute the bridge
 
-## 🏗️ **Architecture & Technology**
+## 🏗️ **Technical Architecture**
 
-**🔗 Chainlink CCIP Integration**
+### Smart Contracts
+- **ZelionBridgeV3.sol**: Message-only CCIP bridge (burns/mints tokens)
+- **ZYLToken.sol**: ERC20 token with bridge role management
+- **Upgradeable**: UUPS proxy pattern for future enhancements
+- **Fee Buffer**: 50% buffer on CCIP fees for reliable transactions
+
+### Chainlink CCIP Integration
 - Native CCIP router integration for secure cross-chain messaging
 - Support for CCIP-whitelisted tokens (CCIP-BnM for testing)
 - Accurate fee estimation using Chainlink's getFee() function
 
-**⚡ Smart Contract Stack**
-- CrossChainTransfer.sol: Main bridge contract
-- ZYLToken.sol: Native ERC-20 token with minting capabilities
-- OpenZeppelin security standards and access controls
-- Comprehensive error handling and event logging
 
 **🎨 Frontend Technology**
 - Next.js 15 with React 19 for modern web experience
@@ -60,9 +68,10 @@ Zelion Network is a production-ready cross-chain interoperability platform built
 
 ### **Arbitrum Sepolia Testnet**
 - **CrossChainTransfer**: `0x9197F8E2e13B67701B2fFb32C13Cc49c4916d7D4`
-- **ZYL Token**: `0xEAccd130B812f8b7D8C4404bb08c0Ff82F5B6890`
-- **CCIP-BnM Test Token**: `0xA8C0c11bf64AF62CDCA6f93D3769B88BdD7cb93D`
-- **Chainlink Router**: `0x2a9C5afB0d0e4BAb2BCdaE109EC4b0c4Be15a165`
+- **ZYL Token**: `0xd53E07D67d30cE5562e8C0aE6e569b4FAf830A45`
+- **ZelionBridgeV3**: `0xfB89C3Ea94A6750446E394110334Fb6a8B3a7f61`
+- **CCIP Router**: `0x2a9C5afB0d0e4BAb2BCdaE109EC4b0c4Be15a165`
+- **CCIP-BnM Token**: `0xA8C0c11bf64AF62CDCA6f93D3769B88BdD7cb93D`
 
 ### **Chain Selectors**
 - **Arbitrum Sepolia**: `3478487238524512106`

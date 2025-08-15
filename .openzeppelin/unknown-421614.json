@@ -240,6 +240,11 @@
       "address": "0x8d8f4dDc5B71e241081fac2ADDba4d9B20250A74",
       "txHash": "0x5e61e0d884fc485f73d8b016f08bc79d46357e02a2b7071aa5c6264725e34490",
       "kind": "transparent"
+    },
+    {
+      "address": "0xfB89C3Ea94A6750446E394110334Fb6a8B3a7f61",
+      "txHash": "0x370e3cff64132f5bef844f2b10f1454f354c9fb9de6c93ddee6781d7bed5ad1f",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -674,6 +679,193 @@
           },
           "t_struct(TokenConfig)6502_storage": {
             "label": "struct ZelionBridge.TokenConfig",
+            "members": [
+              {
+                "label": "isSupported",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "isBurnable",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "destinationToken",
+                "type": "t_address",
+                "offset": 2,
+                "slot": "0"
+              },
+              {
+                "label": "destinationChainSelector",
+                "type": "t_uint64",
+                "offset": 22,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {}
+      }
+    },
+    "0596e9f68f333be20d1cf844ca5a6a7305d8a584e6af01bc76118dc0b1358852": {
+      "address": "0x079a4080549c97AE75b53DC7268Fe13420ac5100",
+      "txHash": "0x29447ff322c2f16dd5ed44102fe5019685ce51f7ec4eabf3be00d31e5544dc42",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:40"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:88"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\PausableUpgradeable.sol:116"
+          },
+          {
+            "label": "router",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_contract(IRouterClient)42",
+            "contract": "ZelionBridgeV3",
+            "src": "contracts\\ZelionBridgeV3.sol:24"
+          },
+          {
+            "label": "baseFeeBuffer",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_uint256",
+            "contract": "ZelionBridgeV3",
+            "src": "contracts\\ZelionBridgeV3.sol:25"
+          },
+          {
+            "label": "tokenConfigs",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_address,t_struct(TokenConfig)1197_storage)",
+            "contract": "ZelionBridgeV3",
+            "src": "contracts\\ZelionBridgeV3.sol:34"
+          },
+          {
+            "label": "trustedBridges",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_uint64,t_address)",
+            "contract": "ZelionBridgeV3",
+            "src": "contracts\\ZelionBridgeV3.sol:35"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IRouterClient)42": {
+            "label": "contract IRouterClient",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(TokenConfig)1197_storage)": {
+            "label": "mapping(address => struct ZelionBridgeV3.TokenConfig)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_address)": {
+            "label": "mapping(uint64 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(TokenConfig)1197_storage": {
+            "label": "struct ZelionBridgeV3.TokenConfig",
             "members": [
               {
                 "label": "isSupported",
