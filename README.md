@@ -158,7 +158,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 **Links**
 
-- **Live Bridge**: https://zelion-bridge.windsurf.build
+- **Live Bridge**: https://zelion-bridge-v2.windsurf.build
 - **GitHub**: https://github.com/Zelionnetwork/zelion-network
 - **Documentation**: Coming soon
 - **Community**: Join our Discord (link coming soon)
