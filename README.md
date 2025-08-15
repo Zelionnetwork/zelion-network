@@ -6,7 +6,7 @@ Zelion Network is a production-ready cross-chain interoperability platform built
 
 > 🔐 **Secure** • 🌉 **Cross-Chain Ready** • ⚡ **Production Deployed** • 🧪 **Community Tested**
 
-## 🎉 Latest Updates (December 2024)
+## 🎉 Latest Updates
 
 - **✅ Fee Buffer Optimization**: Implemented 50% fee buffer for reliable CCIP transactions
 - **✅ ZelionBridgeV3 Deployed**: Message-only architecture for non-whitelisted tokens
