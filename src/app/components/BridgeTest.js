@@ -22,23 +22,18 @@ export default function BridgeTest() {
     setResult(null);
 
     try {
-      // Get provider and signer
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
 
-      // Initialize blockchain service
       const service = new BlockchainService();
       await service.initialize(provider, signer);
 
-      // Test 1: Check if bridge contract is accessible
       const bridgeContract = service.bridgeContract;
       const isPaused = await bridgeContract.isPaused();
       
-      // Test 2: Check token contract
       const tokenContract = service.getTokenContract('Arbitrum Sepolia');
       const tokenBalance = await tokenContract.balanceOf(address);
       
-      // Test 3: Check allowance
       const allowance = await tokenContract.allowance(address, '0xC882b481478F2431c29518932A52978dfb7407E1');
 
       setResult({
