@@ -1,6 +1,9 @@
 // ZYL Token addresses on different chains
 export const ZYL_TOKEN_ADDRESSES = {
   'Arbitrum Sepolia': '0x6953C136c5816AdA72C2Ca72349431F2C81CC6e9',
+  'Arbitrum One': '0x0000000000000000000000000000000000000000', // Add actual address
+  'Polygon': '0x0000000000000000000000000000000000000000', // Add actual address
+  'Polygon Amoy': '0x0000000000000000000000000000000000000000', // Add actual address
 };
 
 export const CHAIN_SELECTORS = {

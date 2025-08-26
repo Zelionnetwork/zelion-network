@@ -7,6 +7,7 @@ import {
   arbitrum,
   optimism,
   arbitrumSepolia,
+  polygonAmoy,
 } from 'wagmi/chains';
 import {
   getDefaultConfig,
@@ -20,14 +21,15 @@ const queryClient = new QueryClient();
 
 const config = getDefaultConfig({
   appName: 'Zelion Chain',
-  projectId: 'c9c4efc298258660bd60dc1519ed2e51', // ✅ Make sure this is valid
-  chains: [mainnet, polygon, arbitrum, optimism, arbitrumSepolia], // ✅ Add this
+  projectId: 'c9c4efc298258660bd60dc1519ed2e51',
+  chains: [mainnet, polygon, arbitrum, optimism, arbitrumSepolia, polygonAmoy],
   transports: {
     [mainnet.id]: http(),
     [polygon.id]: http(),
     [arbitrum.id]: http(),
     [optimism.id]: http(),
-    [arbitrumSepolia.id]: http(), // ✅ Add transport
+    [arbitrumSepolia.id]: http(),
+    [polygonAmoy.id]: http(),
   },
   ssr: true,
 });
