@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,12 +10,15 @@ export default function Navbar() {
   const navItems = [
     { label: 'Home', href: '/#hero' },
     { label: 'Features', href: '/#features' },
-    { label: 'Swap', href: '/swap' },
-    { label: 'Connect', href: '/connect' },
+    // { label: 'Bridge', href: '/bridge' },
+    // { label: 'Swap', href: '/swap' },
+    // { label: 'Faucet', href: '/faucet' },
+    // { label: 'Staking', href: '/staking' },
     { label: 'About', href: '/about' },
     { label: 'Docs', href: '/docs' },
     { label: 'Developers', href: '/developers' },
     { label: 'Ecosystem', href: '/ecosystem' },
+    { label: 'Dashboard', href: '/connect' },
   ];
 
   return (
@@ -30,6 +34,29 @@ export default function Navbar() {
           <span className="text-xl font-heading font-bold text-transparent bg-gradient-to-r from-cyan-400 to-cyan-200 bg-clip-text">
             Zelion
           </span>
+        </div>
+
+        {/* 🔗 Desktop Nav */}
+        <ul className="hidden sm:flex gap-8 text-sm font-medium font-body text-gray-300">
+          {navItems.map(({ label, href }) => (
+            <li key={label}>
+              <Link
+                href={href}
+                className="hover:text-cyan-300 transition duration-200"
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* 🔐 Connect Wallet Button */}
+        <div className="hidden sm:block">
+          <ConnectButton 
+            showBalance={false}
+            chainStatus="icon"
+            showNetwork={false}
+          />
         </div>
 
         {/* 📱 Mobile Menu Toggle */}
@@ -51,20 +78,6 @@ export default function Navbar() {
             )}
           </svg>
         </button>
-
-        {/* 🔗 Desktop Nav */}
-        <ul className="hidden sm:flex gap-8 text-sm font-medium font-body text-gray-300">
-          {navItems.map(({ label, href }) => (
-            <li key={label}>
-              <Link
-                href={href}
-                className="hover:text-cyan-300 transition duration-200"
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
       </div>
 
       {/* 🔗 Animated Mobile Menu */}
@@ -85,6 +98,14 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
+          {/* 🔐 Mobile Connect Wallet Button */}
+          <li className="pt-2">
+            <ConnectButton 
+              showBalance={false}
+              chainStatus="icon"
+              showNetwork={false}
+            />
+          </li>
         </ul>
       </div>
     </nav>

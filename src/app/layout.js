@@ -1,4 +1,5 @@
 import Providers from './providers';
+import { ConditionalLayout } from './components/ConditionalNavbar';
 
 export const metadata = {
   title: 'Zelion Chain',
@@ -105,7 +106,11 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className="min-h-screen bg-dark text-white font-body antialiased">
-        <Providers>{children}</Providers>
+        <Providers>
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
+        </Providers>
       </body>
     </html>
   );

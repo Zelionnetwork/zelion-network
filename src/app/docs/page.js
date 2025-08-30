@@ -1,6 +1,5 @@
 'use client';
 
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
 import {
@@ -41,8 +40,6 @@ export default function DocsPage() {
 
   return (
     <>
-      <Navbar />
-
       <section className="min-h-screen py-24 px-6 sm:px-12 bg-[#0f1115]/85 backdrop-blur-md text-white">
         <div className="max-w-6xl mx-auto space-y-16 text-center">
           {/* 🧠 Header */}
@@ -57,7 +54,7 @@ export default function DocsPage() {
             </h1>
             <p className="text-gray-300 text-lg font-body max-w-3xl mx-auto leading-relaxed">
               Explore our developer documentation, API references, SDKs, and architecture insights.
-              Whether you're building on Zelion or integrating with your chain — it’s all here.
+              Whether you're building on Zelion or integrating with your chain — it's all here.
             </p>
           </motion.div>
 

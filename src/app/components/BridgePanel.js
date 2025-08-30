@@ -147,8 +147,7 @@ export default function BridgePanel() {
 
   return (
     <section className="min-h-screen py-20 px-6 sm:px-12 bg-[#0f1115]/80 text-white font-body relative">
-      <div className="absolute inset-0 z-[-1] bg-gradient-to-br from-[#00f0ff0d] to-transparent pointer-events-none" />
-      <h2 className="text-3xl font-heading text-cyan-300 text-center mb-10">
+      <h2 className="text-2xl sm:text-3xl font-heading text-cyan-300 text-center mb-6 sm:mb-10 hidden sm:block">
         Cross-Chain Bridge
       </h2>
 

@@ -1,6 +1,5 @@
 'use client';
 
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
 import {
@@ -51,7 +50,7 @@ export default function EcosystemPage() {
       icon: <FiActivity className="text-cyan-300 text-2xl mb-2" />,
       items: [
         { label: 'The Graph', href: 'https://thegraph.com' },
-        { label: 'Alchemy', href: 'https://www.alchemy.com' },
+        { label: 'Zelion', href: 'https://zelion.network' },
         { label: 'QuickNode', href: 'https://www.quicknode.com' },
         { label: 'Infura', href: 'https://www.infura.io' },
       ],
@@ -70,8 +69,6 @@ export default function EcosystemPage() {
 
   return (
     <>
-      <Navbar />
-
       <section className="min-h-screen py-24 px-6 sm:px-12 bg-[#0f1115]/90 backdrop-blur-md text-white font-body">
         <div className="max-w-6xl mx-auto space-y-16">
           {/* 🔹 Header */}
@@ -85,7 +82,7 @@ export default function EcosystemPage() {
               Zelion Ecosystem
             </h1>
             <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              A growing ecosystem of bridges, wallets, dev tools, and decentralized protocols built around Zelion’s
+              A growing ecosystem of bridges, wallets, dev tools, and decentralized protocols built around Zelion's
               post-quantum infrastructure.
             </p>
           </motion.header>

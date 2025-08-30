@@ -133,18 +133,17 @@ export default function SwapPanel() {
   };
 
   return (
-    <section className="min-h-screen py-20 px-6 sm:px-12 bg-[#0f1115]/80 text-white font-body relative">
-      <div className="absolute inset-0 z-[-1] bg-gradient-to-br from-[#00f0ff0d] to-transparent pointer-events-none" />
+    <section className="min-h-screen lg:py-20 py-0 px-1 sm:px-12 bg-[#0f1115]/80 text-white font-body relative">
       
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-3xl font-heading text-cyan-300 text-center mb-4">
+        <h2 className="text-2xl sm:text-3xl font-heading text-cyan-300 text-center mb-4 hidden sm:block">
           Zelion Token Swap
         </h2>
-        <div className="glass p-8 rounded-xl shadow-xl border border-cyan-500/20 backdrop-blur-md space-y-6">
+        <div className="glass p-4 sm:p-8 rounded-xl shadow-xl border border-cyan-500/20 backdrop-blur-md space-y-4 sm:space-y-6">
           {/* Chain Info */}
-          <div className="text-center">
+          <div className="text-center hidden sm:block">
             <p className="text-sm text-cyan-200 mb-1">Current Network</p>
-            <p className="text-lg font-semibold text-cyan-300">
+            <p className="text-base sm:text-lg font-semibold text-cyan-300">
               {currentChain ? currentChain.name : 'Unsupported Network'}
             </p>
           </div>

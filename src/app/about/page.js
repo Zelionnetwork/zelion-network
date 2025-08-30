@@ -1,6 +1,5 @@
 'use client';
 
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
 import {
@@ -72,8 +71,6 @@ export default function AboutPage() {
 
   return (
     <>
-      <Navbar />
-
       <main className="min-h-screen py-24 px-6 sm:px-12 bg-[#0f1115]/90 backdrop-blur-md text-white font-body">
         <div className="max-w-6xl mx-auto space-y-20">
           {/* 🧠 Page Heading */}
