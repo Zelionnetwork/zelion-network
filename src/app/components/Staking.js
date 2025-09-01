@@ -249,7 +249,6 @@ export default function Staking() {
     const toast = { id, message, type };
     setToasts(prev => [...prev, toast]);
     
-    // Auto-remove after 5 seconds
     setTimeout(() => {
       removeToast(id);
     }, 5000);
@@ -259,13 +258,11 @@ export default function Staking() {
     setToasts(prev => prev.filter(toast => toast.id !== id));
   };
 
-  // Handle transaction errors
   useEffect(() => {
     if (isStakePending && !isStaking) {
       setIsStaking(true);
     }
     if (!isStakePending && isStaking) {
-      // Transaction completed or failed
       setTimeout(() => {
         setIsStaking(false);
       }, 2000);
@@ -277,7 +274,6 @@ export default function Staking() {
       setIsUnstaking(true);
     }
     if (!isUnstakePending && isUnstaking) {
-      // Transaction completed or failed
       setTimeout(() => {
         setIsUnstaking(false);
       }, 2000);
@@ -289,14 +285,12 @@ export default function Staking() {
       setIsClaiming(true);
     }
     if (!isClaimPending && isClaiming) {
-      // Transaction completed or failed
       setTimeout(() => {
         setIsClaiming(false);
       }, 2000);
     }
   }, [isClaimPending, isClaiming]);
 
-  // Format numbers for display
   const formatNumber = (value, decimals = 4) => {
     if (!value) return '0';
     try {
@@ -309,31 +303,10 @@ export default function Staking() {
   return (
     <section className="lg:py-24 py-0 px-3 sm:px-12 bg-[#0f1115] text-white font-body relative backdrop-blur-lg">
       <div className="relative z-10 lg:max-w-6xl mx-auto space-y-12">
-        {/* 🧠 Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center space-y-6 hidden sm:block"
-        >
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <div className="p-3 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full">
-              <TrendingUp className="w-8 h-8 text-white" />
-            </div>
-          </div>
-          <h2 className="text-4xl font-heading font-bold text-transparent bg-gradient-to-r from-cyan-300 via-blue-400 to-cyan-200 bg-clip-text drop-shadow-lg">
-            Zelion Staking
-          </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Stake your ZYL tokens to earn rewards and participate in the Zelion ecosystem. 
-            Start earning passive income with our competitive APY rates.
-          </p>
-        </motion.div>
 
-        {/* 🔗 Wallet Connection */}
+        {/* Wallet Connection */}
         {!isConnected ? (
-          <motion.div
+          <div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
@@ -362,17 +335,10 @@ export default function Staking() {
                 </ConnectButton.Custom>
               </div>
             </div>
-          </motion.div>
+          </div>
         ) : (
           <>
-            {/* 📊 Staking Information */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-              viewport={{ once: true }}
-              className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
-            >
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               <div className="lg:p-6 p-4 bg-[#0b0c10]/70 rounded-2xl border border-cyan-500/20">
                 <div className="flex items-center space-x-3 mb-3">
                   <div className="lg:w-10 lg:h-10 w-7 h-7  bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center">
@@ -387,7 +353,7 @@ export default function Staking() {
 
               <div className="lg:p-6 p-4 bg-[#0b0c10]/70 rounded-2xl border border-cyan-500/20">
                 <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-10 lg:h-10 lg:bg-g w-7 h-7 bg-gradient-to-br from-fuchsia-400 to-pink-500 rounded-full flex items-center justify-center">
+                  <div className="lg:w-10 lg:h-10 w-7 h-7 bg-gradient-to-br from-fuchsia-400 to-pink-500 rounded-full flex items-center justify-center">
                     <TrendingUp className="lg:w-5 lg:h-5 w-4 h-4 text-white" />
                   </div>
                   <span className="text-gray-400 lg:text-sm text-xs">Total Staked</span>
@@ -420,17 +386,10 @@ export default function Staking() {
                   {calculateAPY()}%
                 </p>
               </div>
-            </motion.div>
+            </div>
 
-            {/* 🚀 Staking Actions */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="grid grid-cols-1 lg:grid-cols-2 gap-8"
-            >
-              {/* Stake Tokens */}
+            {/* Staking Actions */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="lg:p-6 p-4 bg-[#0b0c10]/70 rounded-2xl border border-cyan-500/20">
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center">
@@ -529,10 +488,10 @@ export default function Staking() {
                   </button>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            {/* 🎁 Claim Rewards */}
-            <motion.div
+            {/* Claim Rewards */}
+            <div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9 }}
@@ -575,15 +534,13 @@ export default function Staking() {
                   </button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </>
         )}
       </div>
-
-      {/* 🍞 Toast Notifications */}
       <AnimatePresence>
         {toasts.map((toast) => (
-          <motion.div
+          <div
             key={toast.id}
             initial={{ opacity: 0, x: 300 }}
             animate={{ opacity: 1, x: 0 }}
@@ -606,7 +563,7 @@ export default function Staking() {
                 <X className="w-4 h-4" />
               </button>
             </div>
-          </motion.div>
+          </div>
         ))}
       </AnimatePresence>
     </section>

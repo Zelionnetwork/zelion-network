@@ -15,7 +15,6 @@ import {
   Zap
 } from 'lucide-react';
 
-// Chain information
 const CHAIN_INFO = {
   1: { name: 'Ethereum', symbol: 'ETH', color: 'from-cyan-400 to-cyan-600' },
   137: { name: 'Polygon', symbol: 'MATIC', color: 'from-fuchsia-400 to-pink-500' },
@@ -46,7 +45,6 @@ export default function Faucet() {
     clearMessages,
   } = useFaucet();
 
-  // Debug logging
   console.log('Faucet Component State:', {
     isConnected,
     currentChainId,
@@ -57,7 +55,6 @@ export default function Faucet() {
 
   const chainInfo = currentChainId ? CHAIN_INFO[currentChainId] : null;
 
-  // Check cooldown timer
   useEffect(() => {
     if (lastRequestTime) {
       const cooldown = 24 * 60 * 60 * 1000; 
@@ -87,37 +84,8 @@ export default function Faucet() {
 
   return (
     <section className="py-24 px-6 sm:px-12 bg-[#0f1115] text-white font-body relative backdrop-blur-lg">
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-transparent z-0 pointer-events-none" />
       <div className="relative z-10 lg:max-w-4xl mx-auto space-y-12">
-        {/* 🧠 Header */}
-        {/* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center space-y-4 sm:space-y-6 hidden sm:block"
-        >
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <div className="p-2 sm:p-3 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full">
-              <Coins className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-            </div>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-heading font-bold text-transparent bg-gradient-to-r from-cyan-300 via-blue-400 to-cyan-200 bg-clip-text drop-shadow-lg">
-            Zelion Faucet
-          </h2>
-          <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
-            Get native gas tokens to test Zelion's cross-chain features. Connect your wallet and request tokens from our pre-deployed faucet contracts.
-          </p>
-        </motion.div> */}
-
-        {/* 🔗 Wallet Connection */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          className="flex justify-center"
-        >
+        <div className="flex justify-center">
           {!isConnected ? (
             <div className="text-center space-y-4">
               <div className="p-4 bg-[#0b0c10]/70 rounded-2xl border border-cyan-500/20">
@@ -142,7 +110,7 @@ export default function Faucet() {
             </div>
           ) : (
             <div className="w-full max-w-2xl space-y-6">
-              {/* 📍 Current Chain Status */}
+              {/* Current Chain Status */}
               <div className="p-6 bg-[#0b0c10]/70 rounded-2xl border border-cyan-500/20">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-cyan-200">Current Chain</h3>
@@ -185,7 +153,7 @@ export default function Faucet() {
                       </div>
                     </div>
 
-                    {/* ⏰ Cooldown Timer */}
+                    {/* Cooldown Timer */}
                     {cooldownTime > 0 && (
                       <div className="p-4 bg-[#0a0b0f] rounded-xl border border-yellow-500/20">
                         <div className="flex items-center justify-between">
@@ -203,7 +171,7 @@ export default function Faucet() {
                       </div>
                     )}
 
-                    {/* 🚀 Request Button */}
+                    {/* Request Button */}
                     <button
                       onClick={requestTokens}
                       disabled={isLoading || cooldownTime > 0}
@@ -229,9 +197,9 @@ export default function Faucet() {
                 )}
               </div>
 
-              {/* 📱 Messages */}
+              {/* Messages */}
               {error && (
-                <motion.div
+                <div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="p-4 bg-red-500/20 border border-red-500/30 rounded-xl"
@@ -249,11 +217,11 @@ export default function Faucet() {
                       ×
                     </button>
                   </div>
-                </motion.div>
+                </div>
               )}
 
               {success && (
-                <motion.div
+                <div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="p-4 bg-green-500/20 border border-green-500/30 rounded-xl"
@@ -280,50 +248,11 @@ export default function Faucet() {
                       ×
                     </button>
                   </div>
-                </motion.div>
+                </div>
               )}
             </div>
           )}
-        </motion.div>
-
-        {/* 📚 Information */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:block hidden"
-        >
-          <div className="p-6 bg-[#0b0c10]/70 rounded-2xl border border-cyan-500/20 text-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Wallet className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-cyan-200 mb-2">Connect Wallet</h3>
-            <p className="text-gray-400 text-sm">
-              Use MetaMask, WalletConnect, or any Web3 wallet to connect
-            </p>
-          </div>
-
-          <div className="p-6 bg-[#0b0c10]/70 rounded-2xl border border-cyan-500/20 text-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Coins className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-cyan-200 mb-2">Request Tokens</h3>
-            <p className="text-gray-400 text-sm">
-              Get native gas tokens to test Zelion's cross-chain features
-            </p>
-          </div>
-
-          <div className="p-6 bg-[#0b0c10]/70 rounded-2xl border border-cyan-500/20 text-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <RefreshCw className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-cyan-200 mb-2">24h Cooldown</h3>
-            <p className="text-gray-400 text-sm">
-              One request per address per 24 hours to prevent abuse
-            </p>
-          </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

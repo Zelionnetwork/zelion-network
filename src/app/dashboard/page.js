@@ -222,7 +222,7 @@ export default function DashboardPage() {
                       key={item.id}
                       onClick={() => {
                         setActiveTab(item.id);
-                        setIsSidebarOpen(false); // Close sidebar on mobile when navigating
+                        setIsSidebarOpen(false);
                       }}
                       className="w-full p-3 rounded-lg border border-cyan-500/20 hover:border-cyan-300/40 transition-all duration-300 hover:scale-105 group"
                     >
@@ -349,8 +349,8 @@ export default function DashboardPage() {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed lg:relative lg:translate-x-0 z-50 lg:z-auto w-64 bg-[#0b0c10]/90 border-r border-cyan-500/20 backdrop-blur-sm h-full transition-transform duration-300 ${
-        isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      <div className={`fixed lg:relative lg:translate-x-0 z-50 lg:z-auto w-64 bg-[#0b0c10]/90 border-r border-cyan-500/20 backdrop-blur-sm transition-transform duration-300 ${
+        isSidebarOpen ? 'translate-x-0 h-full' : '-translate-x-full lg:translate-x-0'
       }`}>
         <div className="p-4 sm:p-6">
           <div className="flex items-center justify-between mb-6 sm:mb-8">
