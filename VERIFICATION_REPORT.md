@@ -162,5 +162,5 @@ npx hardhat verify --network arbitrumSepolia 0xCf7Ed3AccA5a467e9e704C703E8D87F63
 **The dApp is fully deployed and ready for testing on Arbitrum Sepolia testnet with guaranteed low transaction fees.**
 
 ---
-*Generated: January 2, 2025*
+
 *Network: Arbitrum Sepolia (421614)*
