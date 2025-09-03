@@ -1,0 +1,17 @@
+{
+  "network": "arbitrum-sepolia",
+  "chainId": 421614,
+  "contracts": {
+    "ZYLToken": "0xB3F18c487c020A0EfD0dae6F1EDDbE24fcc757D0",
+    "Faucet": "0xeD3BfBB4906b45DB10430D2f7248146eC5c05c41",
+    "SimpleSwap": "0x21CaA57210f7DFe710B25dCD78E6D753Cd17877a",
+    "Staking": "0xC5E05EBA99784b00Dd0244c0E47A4DAe79F2eF72"
+  },
+  "deployer": "0x0D9DD7701bb615E0d710b5E082D05549DCbf917c",
+  "timestamp": "2025-01-03T00:40:00.000Z",
+  "configuration": {
+    "faucetBalance": "1,000,000 ZYL",
+    "faucetCooldown": "24 hours",
+    "tokenWhitelisted": true
+  }
+}
