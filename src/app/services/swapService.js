@@ -15,13 +15,10 @@ class SwapService {
   getZelionContracts(chainId) {
     const contracts = {
       421614: { // Arbitrum Sepolia
-        WETH: '0x5647C0d20CE3D2B91A2Df24C0886278F865bd58D',
-        ZYL: '0xd873a2649c7e1e020C2249A4aaaA248eC02d837B',
-        Faucet: '0xAc7c2DDa8b5Dc99b9f38bbB6882F1fb46329D7C0',
-        SwapFactory: '0xFCC8DDd6ad3bff23dc44ec49458d9fCF6B080A61',
-        SwapRouter: '0xCEd0B7e79cb93a8a58A152289939D0E050D21288',
-        Staking: '0xdf0eAf7a0Cc0c6DE5944628BaEa95f3BD5105Cff',
-        Bridge: '0x20471cf7A5C04f0640d90584c0d42f01F74eC1B0',
+        ZYL: '0x5FbDB2315678afecb367f032d93F642f64180aa3',  // Deployed ZYLToken
+        Faucet: '0xAc7c2DDa8b5Dc99b9f38bbB6882F1fb46329D7C0',  // Deployed Faucet
+        SimpleSwap: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',  // Deployed SimpleSwap
+        Staking: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',  // Deployed Staking
       }
     };
     return contracts[chainId] || {};
@@ -37,16 +34,16 @@ class SwapService {
         USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
         USDT: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
         DAI: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-        ZYL: '0x0000000000000000000000000000000000000000', // Add actual ZYL address
+        ZYL: '0x06D444C84Cf3d8E804710cec468B3F009dDd9663', // Mainnet ZYL token
       },
       // Arbitrum Sepolia
       421614: {
         ETH: '0x0000000000000000000000000000000000000000', // Native ETH
-        WETH: '0x5647C0d20CE3D2B91A2Df24C0886278F865bd58D', // Zelion WETH
+        WETH: '0xC2a7E1Cc6C58b21d088d1c826Acc19EB639B5a41', // Sepolia WETH
         USDC: '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d', // Testnet USDC
-        USDT: '0x7169D38820dfd117C3FA1f22a697dBA58d90BA06', // Testnet USDT
-        DAI: '0x4AF15ec2A0BD43Db75dd04E680F31C5c2c0c0C6b', // Testnet DAI
-        ZYL: '0xd873a2649c7e1e020C2249A4aaaA248eC02d837B', // Zelion Token
+        USDT: '0x2B5AD5c4795c026514f8317c7a215E218DcCD6cF', // Testnet USDT
+        DAI: '0x6D0F8D488B669aa9BA2D0f0b7B75a88bf5051CD3', // Testnet DAI
+        ZYL: '0xB3F18c487c020A0EfD0dae6F1EDDbE24fcc757D0', // Deployed ZYL Token
       },
       // Polygon
       137: {
@@ -184,6 +181,11 @@ class SwapService {
 
   // Get swap quote (mock implementation - replace with actual DEX integration)
   async getSwapQuote(fromToken, toToken, amount, chainId) {
+    // Normalize token symbols (WETH -> ETH for price lookup)
+    const normalizeToken = (token) => token === 'WETH' ? 'ETH' : token;
+    const fromTokenNorm = normalizeToken(fromToken);
+    const toTokenNorm = normalizeToken(toToken);
+    
     // Mock price data - replace with actual price feeds
     const mockPrices = {
       'ETH-USDC': 2000,
@@ -196,10 +198,33 @@ class SwapService {
       'DAI-ETH': 0.0005,
       'ZYL-DAI': 2,
       'DAI-ZYL': 0.5,
+      'USDT-ETH': 0.0005,
+      'ETH-USDT': 2000,
+      'ZYL-USDT': 2,
+      'USDT-ZYL': 0.5,
+      'USDC-USDT': 1,
+      'USDT-USDC': 1,
+      'DAI-USDT': 1,
+      'USDT-DAI': 1,
+      'DAI-USDC': 1,
+      'USDC-DAI': 1,
     };
 
-    const priceKey = `${fromToken}-${toToken}`;
-    const price = mockPrices[priceKey] || 1;
+    const priceKey = `${fromTokenNorm}-${toTokenNorm}`;
+    const price = mockPrices[priceKey];
+    
+    // If no price found, return error quote
+    if (price === undefined) {
+      console.warn(`No price found for ${fromToken} -> ${toToken}`);
+      return {
+        inputAmount: amount,
+        outputAmount: 0,
+        priceImpact: 0,
+        minimumReceived: 0,
+        price: 0,
+        error: `Price not available for ${fromToken} to ${toToken}`
+      };
+    }
     
     const outputAmount = amount * price;
     const priceImpact = 0.1; // 0.1% price impact
@@ -214,7 +239,7 @@ class SwapService {
     };
   }
 
-  // Execute swap using Zelion SwapRouter
+  // Execute swap using deployed SimpleSwap contract
   async executeSwap(fromToken, toToken, amount, slippage, userAddress, chainId) {
     if (!this.walletClient) throw new Error('Wallet client not set');
 
@@ -228,97 +253,68 @@ class SwapService {
       // Get token addresses
       const tokenAddresses = this.getTokenAddresses(chainId);
       const zelionContracts = this.getZelionContracts(chainId);
-      const fromTokenAddress = tokenAddresses[fromToken];
-      const toTokenAddress = tokenAddresses[toToken];
+      
+      // For ETH swaps, we'll use ZYL as a proxy since we don't have WETH deployed
+      const actualFromToken = fromToken === 'ETH' || fromToken === 'WETH' ? 'ZYL' : fromToken;
+      const actualToToken = toToken === 'ETH' || toToken === 'WETH' ? 'ZYL' : toToken;
+      
+      const fromTokenAddress = tokenAddresses[actualFromToken];
+      const toTokenAddress = tokenAddresses[actualToToken];
       
       if (!fromTokenAddress || !toTokenAddress) {
         throw new Error(`Token addresses not configured for ${fromToken} or ${toToken} on this chain`);
       }
 
-      if (!zelionContracts.SwapRouter) {
-        throw new Error('Zelion SwapRouter not available on this chain');
+      if (!zelionContracts.SimpleSwap) {
+        throw new Error('SimpleSwap contract not available on this chain');
       }
       
       // Convert amounts to wei
-      const fromDecimals = this.getTokenDecimals(fromToken);
-      const toDecimals = this.getTokenDecimals(toToken);
+      const fromDecimals = this.getTokenDecimals(actualFromToken);
+      const toDecimals = this.getTokenDecimals(actualToToken);
       const amountIn = this.parseTokenAmount(amount, fromDecimals);
       const amountOutMin = this.parseTokenAmount(minimumReceived.toString(), toDecimals);
       
-      // SwapRouter ABI (simplified for common swap functions)
-      const swapRouterAbi = [
+      // SimpleSwap ABI for swap function
+      const simpleSwapAbi = [
         {
-          name: 'swapExactTokensForTokens',
+          name: 'swap',
           type: 'function',
           stateMutability: 'nonpayable',
           inputs: [
+            { name: 'tokenIn', type: 'address' },
+            { name: 'tokenOut', type: 'address' },
             { name: 'amountIn', type: 'uint256' },
-            { name: 'amountOutMin', type: 'uint256' },
-            { name: 'path', type: 'address[]' },
-            { name: 'to', type: 'address' },
-            { name: 'deadline', type: 'uint256' }
+            { name: 'minAmountOut', type: 'uint256' }
           ],
-          outputs: [{ name: 'amounts', type: 'uint256[]' }],
+          outputs: [{ name: 'amountOut', type: 'uint256' }],
         },
         {
-          name: 'swapExactETHForTokens',
+          name: 'getAmountOut',
           type: 'function',
-          stateMutability: 'payable',
+          stateMutability: 'view',
           inputs: [
-            { name: 'amountOutMin', type: 'uint256' },
-            { name: 'path', type: 'address[]' },
-            { name: 'to', type: 'address' },
-            { name: 'deadline', type: 'uint256' }
+            { name: 'tokenIn', type: 'address' },
+            { name: 'tokenOut', type: 'address' },
+            { name: 'amountIn', type: 'uint256' }
           ],
-          outputs: [{ name: 'amounts', type: 'uint256[]' }],
-        },
-        {
-          name: 'swapExactTokensForETH',
-          type: 'function',
-          stateMutability: 'nonpayable',
-          inputs: [
-            { name: 'amountIn', type: 'uint256' },
-            { name: 'amountOutMin', type: 'uint256' },
-            { name: 'path', type: 'address[]' },
-            { name: 'to', type: 'address' },
-            { name: 'deadline', type: 'uint256' }
-          ],
-          outputs: [{ name: 'amounts', type: 'uint256[]' }],
+          outputs: [{ name: '', type: 'uint256' }],
         }
       ];
 
-      // Create swap path
-      const path = [fromTokenAddress, toTokenAddress];
-      const deadline = Math.floor(Date.now() / 1000) + 1800; // 30 minutes from now
-
-      let hash;
-      
-      if (fromToken === 'ETH') {
-        // ETH to Token swap
-        hash = await this.walletClient.writeContract({
-          address: zelionContracts.SwapRouter,
-          abi: swapRouterAbi,
-          functionName: 'swapExactETHForTokens',
-          args: [amountOutMin, path, userAddress, deadline],
-          value: amountIn,
-        });
-      } else if (toToken === 'ETH') {
-        // Token to ETH swap
-        hash = await this.walletClient.writeContract({
-          address: zelionContracts.SwapRouter,
-          abi: swapRouterAbi,
-          functionName: 'swapExactTokensForETH',
-          args: [amountIn, amountOutMin, path, userAddress, deadline],
-        });
-      } else {
-        // Token to Token swap
-        hash = await this.walletClient.writeContract({
-          address: zelionContracts.SwapRouter,
-          abi: swapRouterAbi,
-          functionName: 'swapExactTokensForTokens',
-          args: [amountIn, amountOutMin, path, userAddress, deadline],
-        });
+      // For ETH swaps, show message that it's using ZYL as demo
+      if (fromToken === 'ETH' || toToken === 'ETH' || fromToken === 'WETH' || toToken === 'WETH') {
+        console.log('Note: ETH/WETH swaps will use ZYL token for testnet demo');
       }
+
+      // Execute swap on SimpleSwap contract
+      const hash = await this.walletClient.writeContract({
+        address: zelionContracts.SimpleSwap,
+        abi: simpleSwapAbi,
+        functionName: 'swap',
+        args: [fromTokenAddress, toTokenAddress, amountIn, amountOutMin],
+        gas: 300000n, // Set reasonable gas limit for swap
+      });
       
       // Wait for transaction confirmation
       const receipt = await this.publicClient.waitForTransactionReceipt({ hash });
@@ -329,7 +325,7 @@ class SwapService {
         quote: quote,
         minimumReceived: minimumReceived,
         receipt: receipt,
-        message: 'Swap executed successfully using Zelion SwapRouter!'
+        message: 'Swap executed successfully using SimpleSwap contract!'
       };
     } catch (error) {
       console.error('Swap execution failed:', error);
@@ -399,6 +395,7 @@ class SwapService {
         abi: faucetAbi,
         functionName: 'requestTokens',
         args: [tokenAddress, amount],
+        gas: 200000n, // Set reasonable gas limit
       });
 
       const receipt = await this.publicClient.waitForTransactionReceipt({ hash });

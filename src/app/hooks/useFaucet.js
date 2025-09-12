@@ -1,20 +1,7 @@
-import { useState, useCallback } from 'react';
-import { useAccount, usePublicClient, useWalletClient, useChainId } from 'wagmi';
-
-// Faucet contract addresses for different chains
-const FAUCET_ADDRESSES = {
-  1: '0x0000000000000000000000000000000000000000', // Ethereum Mainnet - No faucet
-  137: '0x0000000000000000000000000000000000000000', // Polygon - No faucet
-  42161: '0x0000000000000000000000000000000000000000', // Arbitrum One - No faucet
-  10: '0x0000000000000000000000000000000000000000', // Optimism - No faucet
-  8453: '0x0000000000000000000000000000000000000000', // Base - No faucet
-  534352: '0x0000000000000000000000000000000000000000', // Scroll - No faucet
-  // Testnets with faucets
-  421614: '0xAc7c2DDa8b5Dc99b9f38bbB6882F1fb46329D7C0', // Arbitrum Sepolia
-  80002: '0x0000000000000000000000000000000000000000', // Polygon Amoy - Add faucet address
-  11155111: '0x0000000000000000000000000000000000000000', // Ethereum Sepolia - Add faucet address
-  84532: '0x0000000000000000000000000000000000000000', // Base Sepolia - Add faucet address
-};
+import { useCallback, useState, useEffect } from 'react';
+import { useAccount, useWalletClient, usePublicClient, useChainId, useReadContract } from 'wagmi';
+import { parseEther, formatEther } from 'viem';
+import { CONTRACT_ADDRESSES, TOKEN_ADDRESSES } from '../../contracts/addresses';
 
 // Faucet ABI for requesting native tokens
 const FAUCET_ABI = [
@@ -34,6 +21,31 @@ const FAUCET_ABI = [
       { name: 'amount', type: 'uint256' }
     ],
     outputs: [],
+  },
+  {
+    name: 'lastRequestTime',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
+  },
+  {
+    name: 'COOLDOWN_TIME',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256' }],
+  }
+];
+
+// Token ABI for balance checking
+const TOKEN_ABI = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'account', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
   }
 ];
 
@@ -43,32 +55,94 @@ export const useFaucet = () => {
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
 
-  // Debug logging
-  console.log('useFaucet Hook State:', {
-    address,
-    isConnected,
-    chainId,
-    publicClient: !!publicClient,
-    walletClient: !!walletClient
-  });
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [lastRequestTime, setLastRequestTime] = useState(null);
   const [cooldownTime, setCooldownTime] = useState(0);
 
-  const faucetAddress = chainId ? FAUCET_ADDRESSES[chainId] : null;
+  const faucetAddress = chainId ? CONTRACT_ADDRESSES[chainId]?.Faucet : null;
+  const tokenAddress = chainId ? TOKEN_ADDRESSES[chainId]?.ZYL : null;
   const hasFaucet = faucetAddress && faucetAddress !== '0x0000000000000000000000000000000000000000';
+
+  // Debug logging - commented out to reduce console spam
+  // console.log('useFaucet Hook State:', {
+  //   address,
+  //   isConnected,
+  //   chainId,
+  //   publicClient: !!publicClient,
+  //   walletClient: !!walletClient,
+  //   faucetAddress,
+  //   tokenAddress
+  // });
+
+  // Read user's ZYL token balance
+  const { data: tokenBalance } = useReadContract({
+    address: tokenAddress,
+    abi: TOKEN_ABI,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    watch: true,
+    enabled: !!address && !!tokenAddress,
+  });
+
+  // Read last request time from contract
+  const { data: lastRequestTimeContract } = useReadContract({
+    address: faucetAddress,
+    abi: FAUCET_ABI,
+    functionName: 'lastRequestTime',
+    args: address ? [address] : undefined,
+    watch: true,
+    enabled: !!address && !!faucetAddress,
+  });
+
+  // Read cooldown time constant from contract
+  const { data: cooldownTimeConstant } = useReadContract({
+    address: faucetAddress,
+    abi: FAUCET_ABI,
+    functionName: 'COOLDOWN_TIME',
+    watch: false,
+    enabled: !!faucetAddress,
+  });
+
+  // Calculate remaining cooldown time
+  useEffect(() => {
+    if (lastRequestTimeContract && cooldownTimeConstant) {
+      const lastTime = Number(lastRequestTimeContract);
+      const cooldown = Number(cooldownTimeConstant);
+      
+      if (lastTime > 0) {
+        const currentTime = Math.floor(Date.now() / 1000);
+        const timePassed = currentTime - lastTime;
+        const remaining = Math.max(0, cooldown - timePassed);
+        
+        setCooldownTime(remaining * 1000); // Convert to milliseconds
+        
+        if (remaining > 0) {
+          const interval = setInterval(() => {
+            const now = Math.floor(Date.now() / 1000);
+            const elapsed = now - lastTime;
+            const timeLeft = Math.max(0, cooldown - elapsed);
+            setCooldownTime(timeLeft * 1000);
+            
+            if (timeLeft === 0) {
+              clearInterval(interval);
+            }
+          }, 1000);
+          
+          return () => clearInterval(interval);
+        }
+      } else {
+        setCooldownTime(0);
+      }
+    } else {
+      setCooldownTime(0);
+    }
+  }, [lastRequestTimeContract, cooldownTimeConstant]);
 
   const requestTokens = useCallback(async () => {
     if (!isConnected || !address || !walletClient || !publicClient || !faucetAddress) {
       setError('Please connect your wallet and ensure you are on a supported chain');
-      return false;
-    }
-
-    if (cooldownTime > 0) {
-      setError('Please wait for the cooldown period to end before requesting more tokens');
       return false;
     }
 
@@ -77,12 +151,19 @@ export const useFaucet = () => {
     setSuccess(null);
 
     try {
-      // Request native tokens from faucet
+      // ZYL Token address on Arbitrum Sepolia (deployed Jan 3, 2025)
+      const ZYL_TOKEN = '0xB3F18c487c020A0EfD0dae6F1EDDbE24fcc757D0';
+      const requestAmount = parseEther('100'); // 100 ZYL tokens with 18 decimals
+      
+      // Request ZYL tokens from faucet
+      // The contract will handle cooldown validation
       const hash = await walletClient.writeContract({
         address: faucetAddress,
         abi: FAUCET_ABI,
-        functionName: 'requestNativeTokens',
-        args: [],
+        functionName: 'requestTokens',
+        args: [ZYL_TOKEN, requestAmount],
+        value: 0n, // Explicitly set value to 0 to avoid sending ETH
+        gas: 200000n, // Set reasonable gas limit
       });
 
       // Wait for transaction confirmation
@@ -103,21 +184,23 @@ export const useFaucet = () => {
       }
     } catch (err) {
       console.error('Faucet request failed:', err);
-      setError(err.message || 'Failed to request tokens from faucet');
+      // Handle specific error messages
+      if (err.message?.includes('24 hours')) {
+        setError('Please wait 24 hours between faucet requests');
+      } else if (err.message?.includes('empty')) {
+        setError('Faucet is empty. Please contact admin to refill.');
+      } else {
+        setError(err.message || 'Failed to request tokens from faucet');
+      }
       return false;
     } finally {
       setIsLoading(false);
     }
-  }, [isConnected, address, walletClient, publicClient, faucetAddress, cooldownTime]);
+  }, [isConnected, address, walletClient, publicClient, faucetAddress]);
 
   const requestSpecificTokens = useCallback(async (tokenAddress, amount) => {
     if (!isConnected || !address || !walletClient || !publicClient || !faucetAddress) {
       setError('Please connect your wallet and ensure you are on a supported chain');
-      return false;
-    }
-
-    if (cooldownTime > 0) {
-      setError('Please wait for the cooldown period to end before requesting more tokens');
       return false;
     }
 
@@ -127,11 +210,14 @@ export const useFaucet = () => {
 
     try {
       // Request specific tokens from faucet
+      // The contract will handle cooldown validation
       const hash = await walletClient.writeContract({
         address: faucetAddress,
         abi: FAUCET_ABI,
         functionName: 'requestTokens',
         args: [tokenAddress, amount],
+        value: 0n, // Explicitly set value to 0 to avoid sending ETH
+        gas: 200000n, // Set reasonable gas limit
       });
 
       // Wait for transaction confirmation
@@ -152,12 +238,19 @@ export const useFaucet = () => {
       }
     } catch (err) {
       console.error('Faucet request failed:', err);
-      setError(err.message || 'Failed to request tokens from faucet');
+      // Handle specific error messages
+      if (err.message?.includes('24 hours')) {
+        setError('Please wait 24 hours between faucet requests');
+      } else if (err.message?.includes('empty')) {
+        setError('Faucet is empty. Please contact admin to refill.');
+      } else {
+        setError(err.message || 'Failed to request tokens from faucet');
+      }
       return false;
     } finally {
       setIsLoading(false);
     }
-  }, [isConnected, address, walletClient, publicClient, faucetAddress, cooldownTime]);
+  }, [isConnected, address, walletClient, publicClient, faucetAddress]);
 
   const clearMessages = useCallback(() => {
     setError(null);
@@ -182,6 +275,7 @@ export const useFaucet = () => {
     hasFaucet,
     isConnected,
     address,
+    tokenBalance,
 
     // Actions
     requestTokens,

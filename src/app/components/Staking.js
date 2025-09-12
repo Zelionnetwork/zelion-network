@@ -1,27 +1,40 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAccount, useContractRead, useContractWrite, useWatchContractEvent, useWatchPendingTransactions } from 'wagmi';
+import { parseEther, formatEther, parseUnits, formatUnits } from 'viem';
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Wallet, 
   Coins, 
   TrendingUp, 
-  Clock, 
+  Award, 
+  BarChart3, 
+  ArrowUp, 
+  ArrowDown, 
+  RefreshCw, 
   CheckCircle, 
-  AlertCircle, 
-  X,
-  ArrowUp,
-  ArrowDown,
+  AlertCircle,
+  Wallet,
+  Sparkles,
   Zap,
-  RefreshCw
+  Timer,
+  Shield,
+  Star,
+  Clock,
+  X
 } from 'lucide-react';
-import { parseEther, formatEther, parseUnits, formatUnits } from 'viem';
 
-// Staking contract configuration
+// Deployed contract addresses on Arbitrum Sepolia (Jan 3, 2025)
+const TOKEN_CONFIG = {
+  address: '0xB3F18c487c020A0EfD0dae6F1EDDbE24fcc757D0',
+  symbol: 'ZYL',
+  decimals: 18
+};
+
 const STAKING_CONTRACT = {
-  address: '0xdf0eAf7a0Cc0c6DE5944628BaEa95f3BD5105Cff', 
+  address: '0xC5E05EBA99784b00Dd0244c0E47A4DAe79F2eF72',
+  chainId: 421614, // Arbitrum Sepolia
   abi: [
     {
       name: 'stake',
@@ -59,10 +72,33 @@ const STAKING_CONTRACT = {
       outputs: [{ name: '', type: 'uint256' }],
     },
     {
+      name: 'stakes',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [{ name: '', type: 'address' }],
+      outputs: [
+        { name: 'amount', type: 'uint256' },
+        { name: 'startTime', type: 'uint256' },
+        { name: 'lastClaimTime', type: 'uint256' }
+      ],
+    },
+    {
+      name: 'getStakeInfo',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [{ name: 'user', type: 'address' }],
+      outputs: [
+        { name: 'amount', type: 'uint256' },
+        { name: 'startTime', type: 'uint256' },
+        { name: 'lastClaimTime', type: 'uint256' },
+        { name: 'pending', type: 'uint256' }
+      ],
+    },
+    {
       name: 'pendingRewards',
       type: 'function',
       stateMutability: 'view',
-      inputs: [{ name: 'account', type: 'address' }],
+      inputs: [{ name: 'user', type: 'address' }],
       outputs: [{ name: '', type: 'uint256' }],
     },
     {
@@ -75,13 +111,6 @@ const STAKING_CONTRACT = {
   ],
 };
 
-// Token configuration
-const TOKEN_CONFIG = {
-  symbol: 'ZYL',
-  decimals: 18,
-  name: 'Zelion Token',
-};
-
 export default function Staking() {
   const { address, isConnected } = useAccount();
   
@@ -91,119 +120,279 @@ export default function Staking() {
   const [isStaking, setIsStaking] = useState(false);
   const [isUnstaking, setIsUnstaking] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
-
-  // Toast notification state
+  const [isApproving, setIsApproving] = useState(false);
   const [toasts, setToasts] = useState([]);
 
-  // Contract reads
-  const { data: userStakedBalance, refetch: refetchUserBalance } = useContractRead({
+  // Token contract for balance and approval
+  const TOKEN_ABI = [
+    {
+      "inputs": [{"internalType": "address", "name": "owner", "type": "address"}],
+      "name": "balanceOf",
+      "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {"internalType": "address", "name": "owner", "type": "address"},
+        {"internalType": "address", "name": "spender", "type": "address"}
+      ],
+      "name": "allowance",
+      "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {"internalType": "address", "name": "spender", "type": "address"},
+        {"internalType": "uint256", "name": "amount", "type": "uint256"}
+      ],
+      "name": "approve",
+      "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ];
+
+  // Contract reads with refetch capability
+  const { data: tokenBalance, refetch: refetchBalance } = useReadContract({
+    address: TOKEN_CONFIG.address,
+    abi: TOKEN_ABI,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    watch: true, // Enable automatic refetching
+  });
+
+  const { data: tokenAllowance, refetch: refetchAllowance } = useReadContract({
+    address: TOKEN_CONFIG.address,
+    abi: TOKEN_ABI,
+    functionName: 'allowance',
+    args: address ? [address, STAKING_CONTRACT.address] : undefined,
+    watch: true, // Enable automatic refetching
+  });
+
+  const { data: userStakedBalance, refetch: refetchUserStakedBalance, error: stakedError } = useReadContract({
     ...STAKING_CONTRACT,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
-    enabled: !!address,
-    watch: true,
+    watch: true, // Enable automatic refetching
+    enabled: !!address, // Only fetch when address is available
   });
 
-  const { data: totalStaked, refetch: refetchTotalStaked } = useContractRead({
-    ...STAKING_CONTRACT,
-    functionName: 'totalStaked',
-    watch: true,
-  });
-
-  const { data: pendingRewards, refetch: refetchRewards } = useContractRead({
+  const { data: pendingRewards, refetch: refetchPendingRewards, error: rewardsError } = useReadContract({
     ...STAKING_CONTRACT,
     functionName: 'pendingRewards',
     args: address ? [address] : undefined,
-    enabled: !!address,
-    watch: true,
+    watch: true, // Enable automatic refetching
+    enabled: !!address, // Only fetch when address is available
   });
 
-  const { data: rewardRate } = useContractRead({
+  // totalStaked is a public state variable, we read it directly
+  const { data: totalStaked, refetch: refetchTotalStaked } = useReadContract({
+    address: STAKING_CONTRACT.address,
+    abi: [{
+      name: 'totalStaked',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [{ name: '', type: 'uint256' }],
+    }],
+    functionName: 'totalStaked',
+    watch: true, // Enable automatic refetching
+  });
+  
+  // Debug logging
+  useEffect(() => {
+    if (address) {
+      console.log('Staking Debug:', {
+        address,
+        userStakedBalance: userStakedBalance?.toString(),
+        pendingRewards: pendingRewards?.toString(),
+        totalStaked: totalStaked?.toString(),
+        stakedError,
+        rewardsError
+      });
+    }
+  }, [address, userStakedBalance, pendingRewards, totalStaked, stakedError, rewardsError]);
+
+  const { data: rewardRate } = useReadContract({
     ...STAKING_CONTRACT,
     functionName: 'rewardRate',
-    watch: true,
   });
 
   // Contract writes
-  const { write: stakeTokens, data: stakeTxHash, isPending: isStakePending } = useContractWrite({
-    ...STAKING_CONTRACT,
-    functionName: 'stake',
+  const { writeContract: approveTokens, data: approveTxHash, isPending: isApprovePending } = useWriteContract();
+  const { writeContract: stakeTokens, data: stakeTxHash, isPending: isStakePending } = useWriteContract();
+  const { writeContract: unstakeTokens, data: unstakeTxHash, isPending: isUnstakePending } = useWriteContract();
+  const { writeContract: claimRewards, data: claimTxHash, isPending: isClaimPending } = useWriteContract();
+
+  // Watch for approval success
+  const { isSuccess: isApprovalSuccess } = useWaitForTransactionReceipt({
+    hash: approveTxHash,
   });
 
-  const { write: unstakeTokens, data: unstakeTxHash, isPending: isUnstakePending } = useContractWrite({
-    ...STAKING_CONTRACT,
-    functionName: 'unstake',
+  // Watch for stake success
+  const { isSuccess: isStakeSuccess } = useWaitForTransactionReceipt({
+    hash: stakeTxHash,
   });
 
-  const { write: claimRewards, data: claimTxHash, isPending: isClaimPending } = useContractWrite({
-    ...STAKING_CONTRACT,
-    functionName: 'claimRewards',
+  // Watch for unstake success
+  const { isSuccess: isUnstakeSuccess } = useWaitForTransactionReceipt({
+    hash: unstakeTxHash,
   });
 
-  // Watch for transaction events
-  useWatchContractEvent({
-    ...STAKING_CONTRACT,
-    eventName: 'Staked',
-    onLogs: (logs) => {
-      console.log('Stake event:', logs);
-      addToast('Tokens staked successfully!', 'success');
+  // Watch for claim success
+  const { isSuccess: isClaimSuccess } = useWaitForTransactionReceipt({
+    hash: claimTxHash,
+  });
+
+  useEffect(() => {
+    if (isApprovalSuccess) {
+      setIsApproving(false);
+      addToast('Tokens approved! You can now stake.', 'success');
+      // Refetch allowance after approval
+      refetchAllowance();
+    }
+  }, [isApprovalSuccess, refetchAllowance]);
+  
+  useEffect(() => {
+    if (isStakeSuccess) {
       setIsStaking(false);
       setStakeAmount('');
-      refetchUserBalance();
+      addToast('Tokens staked successfully!', 'success');
+      // Immediately refetch and then again after delay
+      refetchBalance();
+      refetchAllowance();
+      refetchUserStakedBalance();
       refetchTotalStaked();
-    },
-  });
-
-  useWatchContractEvent({
-    ...STAKING_CONTRACT,
-    eventName: 'Unstaked',
-    onLogs: (logs) => {
-      console.log('Unstake event:', logs);
-      addToast('Tokens unstaked successfully!', 'success');
+      refetchPendingRewards();
+      
+      // Also refetch after delay to ensure blockchain state is updated
+      setTimeout(() => {
+        console.log('Refetching staking data after successful stake...');
+        refetchBalance();
+        refetchAllowance();
+        refetchUserStakedBalance();
+        refetchTotalStaked();
+        refetchPendingRewards();
+      }, 3000); // 3 second delay for blockchain confirmation
+      
+      // Another refetch after 5 seconds for additional confirmation
+      setTimeout(() => {
+        refetchUserStakedBalance();
+        refetchTotalStaked();
+        refetchPendingRewards();
+      }, 5000);
+    }
+  }, [isStakeSuccess, refetchBalance, refetchAllowance, refetchUserStakedBalance, refetchTotalStaked, refetchPendingRewards]);
+  
+  useEffect(() => {
+    if (isUnstakeSuccess) {
       setIsUnstaking(false);
       setUnstakeAmount('');
-      refetchUserBalance();
+      addToast('Tokens unstaked successfully!', 'success');
+      // Refetch all values after unstaking
+      refetchBalance();
+      refetchUserStakedBalance();
       refetchTotalStaked();
-    },
-  });
-
-  useWatchContractEvent({
-    ...STAKING_CONTRACT,
-    eventName: 'RewardsClaimed',
-    onLogs: (logs) => {
-      console.log('Claim event:', logs);
-      addToast('Rewards claimed successfully!', 'success');
+      refetchPendingRewards();
+    }
+  }, [isUnstakeSuccess, refetchBalance, refetchUserStakedBalance, refetchTotalStaked, refetchPendingRewards]);
+  
+  useEffect(() => {
+    if (isClaimSuccess) {
       setIsClaiming(false);
-      refetchRewards();
-    },
-  });
+      addToast('Rewards claimed successfully!', 'success');
+      // Refetch balance and rewards after claiming
+      refetchBalance();
+      refetchPendingRewards();
+    }
+  }, [isClaimSuccess, refetchBalance, refetchPendingRewards]);
 
-  const pendingTransactions = useWatchPendingTransactions();
-
-  // Calculate APY (placeholder calculation)
+  // Calculate APY based on contract's reward rate (100 basis points = 1% per day)
   const calculateAPY = () => {
-    if (!rewardRate || !totalStaked) return 0;
+    if (!rewardRate) return 0;
     try {
-      const annualRewards = Number(formatEther(rewardRate)) * 365 * 24 * 60 * 60; 
-      const totalStakedAmount = Number(formatEther(totalStaked));
-      if (totalStakedAmount === 0) return 0;
-      return ((annualRewards / totalStakedAmount) * 100).toFixed(2);
+      // rewardRate is 100 basis points (1% per day)
+      // Convert basis points to percentage: 100 / 10000 = 0.01 (1%)
+      const dailyRate = Number(rewardRate) / 10000; // 100 / 10000 = 0.01
+      // Annual rate: (1 + dailyRate)^365 - 1
+      const annualRate = Math.pow(1 + dailyRate, 365) - 1;
+      return (annualRate * 100).toFixed(2);
     } catch {
       return 0;
     }
   };
 
-  // Handle staking
-  const handleStake = async () => {
-    if (!stakeAmount || !stakeTokens) return;
+  // Handle approval
+  const handleApprove = async () => {
+    if (!stakeAmount || !approveTokens) return;
     
     try {
       const amount = parseEther(stakeAmount);
-      stakeTokens({ args: [amount] });
-      setIsStaking(true);
+      approveTokens({
+        address: TOKEN_CONFIG.address,
+        abi: TOKEN_ABI,
+        functionName: 'approve',
+        args: [STAKING_CONTRACT.address, amount]
+      });
+      addToast('Approving tokens...', 'info');
+    } catch (error) {
+      console.error('Approval error:', error);
+      addToast('Approval failed', 'error');
+    }
+  };
+
+  // Handle staking
+  const handleStake = async () => {
+    console.log('Stake button clicked');
+    console.log('Stake amount:', stakeAmount);
+    console.log('Token balance:', tokenBalance ? formatEther(tokenBalance) : 'Loading...');
+    console.log('Token allowance:', tokenAllowance ? formatEther(tokenAllowance) : 'Loading...');
+    
+    if (!stakeAmount) {
+      addToast('Please enter an amount to stake', 'error');
+      return;
+    }
+    
+    if (!stakeTokens) {
+      console.error('Stake function not available');
+      addToast('Contract not loaded', 'error');
+      return;
+    }
+    
+    try {
+      const amount = parseEther(stakeAmount);
+      console.log('Parsed amount:', amount.toString());
+      
+      // Check if user has any ZYL tokens
+      if (!tokenBalance || tokenBalance === 0n) {
+        addToast('You need ZYL tokens first. Use the Faucet to get some!', 'error');
+        return;
+      }
+      
+      // Check if user has enough balance
+      if (amount > tokenBalance) {
+        addToast(`Insufficient balance. You have ${formatEther(tokenBalance)} ZYL`, 'error');
+        return;
+      }
+      
+      // Check allowance
+      if (!tokenAllowance || amount > tokenAllowance) {
+        addToast('Please approve tokens first', 'error');
+        return;
+      }
+      
+      console.log('Calling stake with amount:', amount.toString());
+      stakeTokens({
+        ...STAKING_CONTRACT,
+        functionName: 'stake',
+        args: [amount]
+      });
       addToast('Staking tokens...', 'info');
     } catch (error) {
-      addToast('Invalid amount', 'error');
+      console.error('Staking error:', error);
+      addToast(`Error: ${error.message || 'Invalid amount'}`, 'error');
     }
   };
 
@@ -213,10 +402,14 @@ export default function Staking() {
     
     try {
       const amount = parseEther(unstakeAmount);
-      unstakeTokens({ args: [amount] });
-      setIsUnstaking(true);
+      unstakeTokens({
+        ...STAKING_CONTRACT,
+        functionName: 'unstake',
+        args: [amount]
+      });
       addToast('Unstaking tokens...', 'info');
     } catch (error) {
+      console.error('Unstake error:', error);
       addToast('Invalid amount', 'error');
     }
   };
@@ -225,16 +418,18 @@ export default function Staking() {
   const handleClaimRewards = async () => {
     if (!claimRewards) return;
     
-    claimRewards();
-    setIsClaiming(true);
+    claimRewards({
+      ...STAKING_CONTRACT,
+      functionName: 'claimRewards'
+    });
     addToast('Claiming rewards...', 'info');
   };
 
   // Set max amounts
   const setMaxStake = () => {
-    // This would typically be the user's token balance
-    // For now, we'll use a placeholder
-    setStakeAmount('1000');
+    if (tokenBalance) {
+      setStakeAmount(formatEther(tokenBalance));
+    }
   };
 
   const setMaxUnstake = () => {
@@ -415,27 +610,57 @@ export default function Staking() {
                     </button>
                   </div>
                   
-                  <button
-                    onClick={handleStake}
-                    disabled={!stakeAmount || isStaking || isStakePending}
-                    className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
-                      !stakeAmount || isStaking || isStakePending
-                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white hover:scale-105'
-                    }`}
-                  >
-                    {isStaking || isStakePending ? (
-                      <div className="flex items-center justify-center space-x-2">
-                        <RefreshCw className="w-5 h-5 animate-spin" />
-                        <span>Staking...</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center space-x-2">
-                        <ArrowUp className="w-5 h-5" />
-                        <span>Stake {TOKEN_CONFIG.symbol}</span>
-                      </div>
-                    )}
-                  </button>
+                  {/* Show balance info */}
+                  <div className="text-sm text-gray-400 mb-2">
+                    Balance: {tokenBalance !== undefined ? `${formatNumber(tokenBalance)} ZYL` : 'Loading...'}
+                  </div>
+                  
+                  {/* Show approve button if needed, otherwise stake button */}
+                  {stakeAmount && tokenAllowance !== undefined && parseEther(stakeAmount) > tokenAllowance ? (
+                    <button
+                      onClick={handleApprove}
+                      disabled={!stakeAmount || isApproving || isApprovePending}
+                      className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
+                        !stakeAmount || isApproving || isApprovePending
+                          ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                          : 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white hover:scale-105'
+                      }`}
+                    >
+                      {isApproving || isApprovePending ? (
+                        <div className="flex items-center justify-center space-x-2">
+                          <RefreshCw className="w-5 h-5 animate-spin" />
+                          <span>Approving...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center space-x-2">
+                          <CheckCircle className="w-5 h-5" />
+                          <span>Approve {TOKEN_CONFIG.symbol}</span>
+                        </div>
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleStake}
+                      disabled={!stakeAmount || isStaking || isStakePending || (stakeAmount && tokenBalance && parseEther(stakeAmount) > tokenBalance)}
+                      className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
+                        !stakeAmount || isStaking || isStakePending || (stakeAmount && tokenBalance && parseEther(stakeAmount) > tokenBalance)
+                          ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                          : 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white hover:scale-105'
+                      }`}
+                    >
+                      {isStaking || isStakePending ? (
+                        <div className="flex items-center justify-center space-x-2">
+                          <RefreshCw className="w-5 h-5 animate-spin" />
+                          <span>Staking...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center space-x-2">
+                          <ArrowUp className="w-5 h-5" />
+                          <span>Stake {TOKEN_CONFIG.symbol}</span>
+                        </div>
+                      )}
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -491,7 +716,7 @@ export default function Staking() {
             </div>
 
             {/* Claim Rewards */}
-            <div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9 }}
@@ -534,7 +759,7 @@ export default function Staking() {
                   </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </>
         )}
       </div>

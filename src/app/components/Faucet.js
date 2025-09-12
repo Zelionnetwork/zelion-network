@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useSwitchChain } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { formatEther } from 'viem';
 import { useFaucet } from '../hooks/useFaucet';
 import { 
   Wallet, 
@@ -22,7 +23,7 @@ const CHAIN_INFO = {
   10: { name: 'Optimism', symbol: 'ETH', color: 'from-red-400 to-pink-500' },
   8453: { name: 'Base', symbol: 'ETH', color: 'from-sky-400 to-blue-500' },
   534352: { name: 'Scroll', symbol: 'ETH', color: 'from-yellow-300 to-orange-400' },
-  421614: { name: 'Arbitrum Sepolia', symbol: 'ETH', color: 'from-blue-400 to-indigo-600' },
+  421614: { name: 'Arbitrum Sepolia', symbol: 'ZYL', color: 'from-blue-400 to-indigo-600' },
   80002: { name: 'Polygon Amoy', symbol: 'MATIC', color: 'from-fuchsia-400 to-pink-500' },
   11155111: { name: 'Ethereum Sepolia', symbol: 'ETH', color: 'from-cyan-400 to-cyan-600' },
   84532: { name: 'Base Sepolia', symbol: 'ETH', color: 'from-sky-400 to-blue-500' },
@@ -41,17 +42,21 @@ export default function Faucet() {
     hasFaucet,
     isConnected,
     address,
+    tokenBalance,
     requestTokens,
     clearMessages,
   } = useFaucet();
 
-  console.log('Faucet Component State:', {
-    isConnected,
-    currentChainId,
-    hasFaucet,
-    faucetAddress,
-    address
-  });
+  // Debug logging - commented out to reduce console spam
+  // console.log('Faucet Component State:', {
+  //   isConnected,
+  //   currentChainId,
+  //   hasFaucet,
+  //   faucetAddress,
+  //   address,
+  //   cooldownTime,
+  //   tokenBalance: tokenBalance?.toString()
+  // });
 
   const chainInfo = currentChainId ? CHAIN_INFO[currentChainId] : null;
 
@@ -153,6 +158,17 @@ export default function Faucet() {
                       </div>
                     </div>
 
+                    {/* User Balance Display */}
+                    <div className="flex items-center justify-between p-4 bg-[#0a0b0f] rounded-xl">
+                      <div className="flex items-center space-x-3">
+                        <Coins className="w-5 h-5 text-cyan-400" />
+                        <span className="text-gray-300">Your ZYL Balance</span>
+                      </div>
+                      <div className="text-xl font-semibold text-cyan-200">
+                        {tokenBalance ? formatEther(tokenBalance) : '0'} ZYL
+                      </div>
+                    </div>
+
                     {/* Cooldown Timer */}
                     {cooldownTime > 0 && (
                       <div className="p-4 bg-[#0a0b0f] rounded-xl border border-yellow-500/20">
@@ -189,7 +205,7 @@ export default function Faucet() {
                       ) : (
                         <div className="flex items-center justify-center space-x-2">
                           <Coins className="w-5 h-5" />
-                          <span>Request {chainInfo?.symbol || 'Tokens'}</span>
+                          <span>Request 100 {chainInfo?.symbol || 'ZYL'} Tokens</span>
                         </div>
                       )}
                     </button>

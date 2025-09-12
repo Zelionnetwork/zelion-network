@@ -1,5 +1,6 @@
 import Providers from './providers';
 import { ConditionalLayout } from './components/ConditionalNavbar';
+import NetworkWarning from './components/NetworkWarning';
 
 export const metadata = {
   title: 'Zelion Chain',
@@ -9,7 +10,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -105,8 +106,9 @@ export default function RootLayout({ children }) {
         />
       </head>
 
-      <body className="min-h-screen bg-dark text-white font-body antialiased">
+      <body className="min-h-screen bg-dark text-white font-body antialiased" suppressHydrationWarning>
         <Providers>
+          <NetworkWarning />
           <ConditionalLayout>
             {children}
           </ConditionalLayout>

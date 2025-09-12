@@ -334,16 +334,16 @@ export default function SwapPanel() {
                 Need tokens to test swaps? Get them from the Zelion Faucet!
               </p>
               <div className="flex flex-wrap gap-2">
-                {['ZYL', 'WETH', 'USDC', 'USDT', 'DAI'].map((token) => (
-                  <button
-                    key={token}
-                    onClick={() => getTokensFromFaucet(token)}
-                    disabled={isLoading}
-                    className="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded text-xs text-purple-300 hover:bg-purple-500/30 disabled:opacity-50"
-                  >
-                    Get {token}
-                  </button>
-                ))}
+                <button
+                  onClick={() => getTokensFromFaucet('ZYL')}
+                  disabled={isLoading}
+                  className="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded text-xs text-purple-300 hover:bg-purple-500/30 disabled:opacity-50"
+                >
+                  Get ZYL (100 tokens)
+                </button>
+                <p className="text-xs text-gray-400 w-full mt-1">
+                  Only ZYL tokens are available from the faucet. Other tokens coming soon!
+                </p>
               </div>
             </div>
           )}

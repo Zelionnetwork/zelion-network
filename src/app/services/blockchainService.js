@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import ZelionBridgeABI from '../abi/CrossChainTransfer.json';
+import CrossChainTransferABI from '../abi/CrossChainTransfer.json';
 import ZYLTokenABI from '../abi/ZYLToken.json';
 import { 
   ZELION_BRIDGE_ADDRESS, 
@@ -24,7 +24,7 @@ class BlockchainService {
     // Create contract instance with wallet client for transactions
     this.bridgeContract = {
       address: ZELION_BRIDGE_ADDRESS,
-      abi: ZelionBridgeABI.abi,
+      abi: CrossChainTransferABI,
       walletClient: walletClient,
       publicClient: publicClient
     };
@@ -115,20 +115,18 @@ class BlockchainService {
   }
   async bridgeTokens(fromChain, toChain, amount, receiverAddress) {
     try {
-      const destinationChainSelector = getChainSelector(toChain);
-      if (!destinationChainSelector) {
-        throw new Error(`Unsupported destination chain: ${toChain}`);
-      }
-
-      const fee = ethers.parseEther('0.001');
+      // For testnet demo - simulate bridge with simple transfer
+      // Real bridge would need CCIP or LayerZero integration
       
-      const minAmountOut = amount;
+      // Get ZYL token contract on current chain
+      const tokenContract = this.getTokenContract(fromChain);
+      
+      // Simple transfer to receiver address (same chain demo)
       const hash = await this.walletClient.writeContract({
-        address: this.bridgeContract.address,
-        abi: this.bridgeContract.abi,
-        functionName: 'transferTokens',
-        args: [receiverAddress, amount, minAmountOut],
-        value: fee
+        address: tokenContract.address,
+        abi: tokenContract.abi,
+        functionName: 'transfer',
+        args: [receiverAddress, amount]
       });
 
       const receipt = await this.publicClient.waitForTransactionReceipt({ hash });
@@ -136,10 +134,10 @@ class BlockchainService {
       return {
         success: true,
         transactionHash: receipt.transactionHash,
-        message: 'Bridge transaction successful',
+        message: 'Token transfer successful (Bridge simulation for testnet)',
       };
     } catch (error) {
-      console.error('Error bridging tokens:', error);
+      console.error('Error transferring tokens:', error);
       return {
         success: false,
         error: error.message,
