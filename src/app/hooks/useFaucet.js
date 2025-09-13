@@ -62,7 +62,8 @@ export const useFaucet = () => {
   const [cooldownTime, setCooldownTime] = useState(0);
 
   const faucetAddress = chainId === 421614 ? '0x8a6C94172763Bb4a6484B337779Ca5f0dBF33778' : null;
-  const tokenAddress = chainId ? TOKEN_ADDRESSES[chainId]?.ZYL : null;
+  // Use the testnet ZYL token address
+  const tokenAddress = chainId === 421614 ? '0xd873a2649c7e1e020C2249A4aaaA248eC02d837B' : null;
   const hasFaucet = faucetAddress && faucetAddress !== '0x0000000000000000000000000000000000000000';
 
   // Debug logging - commented out to reduce console spam
