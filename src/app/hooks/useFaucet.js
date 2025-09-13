@@ -71,13 +71,10 @@ export const useFaucet = () => {
   //   isConnected,
   //   chainId,
   //   publicClient: !!publicClient,
-  //   walletClient: !!walletClient,
-  //   faucetAddress,
-  //   tokenAddress
   // });
 
-  // Read user's ZYL token balance
-  const { data: tokenBalance } = useReadContract({
+  // Read user's token balance
+  const { data: tokenBalance, refetch: refetchBalance } = useReadContract({
     address: tokenAddress,
     abi: TOKEN_ABI,
     functionName: 'balanceOf',
@@ -87,7 +84,7 @@ export const useFaucet = () => {
   });
 
   // Read last request time from contract
-  const { data: lastRequestTimeContract } = useReadContract({
+  const { data: lastRequestTimeContract, refetch: refetchLastRequestTime } = useReadContract({
     address: faucetAddress,
     abi: FAUCET_ABI,
     functionName: 'lastRequestTime',
@@ -176,6 +173,12 @@ export const useFaucet = () => {
         });
         setLastRequestTime(Date.now());
         
+        // Refresh balance and cooldown data after successful transaction
+        setTimeout(() => {
+          refetchBalance();
+          refetchLastRequestTime();
+        }, 2000); // Wait 2 seconds for blockchain to update
+        
         // Clear success message after 10 seconds
         setTimeout(() => setSuccess(null), 10000);
         return true;
@@ -229,6 +232,12 @@ export const useFaucet = () => {
           message: `Successfully requested tokens from faucet!`
         });
         setLastRequestTime(Date.now());
+        
+        // Refresh balance and cooldown data after successful transaction
+        setTimeout(() => {
+          refetchBalance();
+          refetchLastRequestTime();
+        }, 2000); // Wait 2 seconds for blockchain to update
         
         // Clear success message after 10 seconds
         setTimeout(() => setSuccess(null), 10000);
