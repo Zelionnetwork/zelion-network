@@ -3,23 +3,13 @@ import { useAccount, useWalletClient, usePublicClient, useChainId, useReadContra
 import { parseEther, formatEther } from 'viem';
 import { CONTRACT_ADDRESSES, TOKEN_ADDRESSES } from '../../contracts/addresses';
 
-// Faucet ABI for requesting native tokens
+// SimpleFaucet ABI - matches our deployed contract
 const FAUCET_ABI = [
-  {
-    name: 'requestNativeTokens',
-    type: 'function',
-    stateMutability: 'nonpayable',
-    inputs: [],
-    outputs: [],
-  },
   {
     name: 'requestTokens',
     type: 'function',
     stateMutability: 'nonpayable',
-    inputs: [
-      { name: 'token', type: 'address' },
-      { name: 'amount', type: 'uint256' }
-    ],
+    inputs: [],
     outputs: [],
   },
   {
@@ -30,7 +20,14 @@ const FAUCET_ABI = [
     outputs: [{ name: '', type: 'uint256' }],
   },
   {
-    name: 'COOLDOWN_TIME',
+    name: 'getRemainingCooldown',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'user', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
+  },
+  {
+    name: 'requestAmount',
     type: 'function',
     stateMutability: 'view',
     inputs: [],
