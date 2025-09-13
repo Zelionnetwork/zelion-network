@@ -151,11 +151,17 @@ export const useFaucet = () => {
 
     try {
       // ZYL Token address on Arbitrum Sepolia (deployed Jan 3, 2025)
-      const ZYL_TOKEN = '0xB3F18c487c020A0EfD0dae6F1EDDbE24fcc757D0';
+      const ZYL_TOKEN = tokenAddress || '0xd873a2649c7e1e020C2249A4aaaA248eC02d837B';
       const requestAmount = parseEther('100'); // 100 ZYL tokens with 18 decimals
       
-      // Request ZYL tokens from faucet
-      // The contract will handle cooldown validation
+      console.log('Attempting faucet request with:', {
+        faucetAddress,
+        ZYL_TOKEN,
+        requestAmount,
+        userAddress: address
+      });
+      
+      // Request tokens from faucet
       const hash = await walletClient.writeContract({
         address: faucetAddress,
         abi: FAUCET_ABI,
@@ -167,6 +173,10 @@ export const useFaucet = () => {
 
       // Wait for transaction confirmation
       const receipt = await publicClient.waitForTransactionReceipt({ hash });
+      
+      console.log('Transaction receipt:', receipt);
+      console.log('Faucet address used:', faucetAddress);
+      console.log('Transaction hash:', hash);
 
       if (receipt.status === 'success') {
         setSuccess({
@@ -238,6 +248,10 @@ export const useFaucet = () => {
 
       // Wait for transaction confirmation
       const receipt = await publicClient.waitForTransactionReceipt({ hash });
+      
+      console.log('Transaction receipt:', receipt);
+      console.log('Faucet address used:', faucetAddress);
+      console.log('Transaction hash:', hash);
 
       if (receipt.status === 'success') {
         setSuccess({
