@@ -13,7 +13,8 @@ import {
   CheckCircle, 
   AlertCircle, 
   ExternalLink,
-  Zap
+  Zap,
+  Plus
 } from 'lucide-react';
 
 const CHAIN_INFO = {
@@ -74,11 +75,41 @@ export default function Faucet() {
     }
   }, [lastRequestTime]);
 
-  const formatTime = (ms) => {
-    const hours = Math.floor(ms / (1000 * 60 * 60));
-    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((ms % (1000 * 60)) / 1000);
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Add ZYL token to MetaMask
+  const addZYLToMetaMask = async () => {
+    try {
+      if (!window.ethereum) {
+        alert('MetaMask is not installed');
+        return;
+      }
+
+      const wasAdded = await window.ethereum.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20',
+          options: {
+            address: '0xd873a2649c7e1e020C2249A4aaaA248eC02d837B',
+            symbol: 'ZYL',
+            decimals: 18,
+            image: 'https://zelion.network/favicon.ico', // Using site favicon as token icon
+          },
+        },
+      });
+
+      if (wasAdded) {
+        console.log('ZYL token added to MetaMask');
+      }
+    } catch (error) {
+      console.error('Error adding ZYL to MetaMask:', error);
+      alert('Failed to add ZYL token to MetaMask');
+    }
   };
 
   const switchToTestnet = () => {
@@ -209,6 +240,19 @@ export default function Faucet() {
                         </div>
                       )}
                     </button>
+
+                    {/* Add ZYL to MetaMask Button */}
+                    {currentChainId === 421614 && (
+                      <button
+                        onClick={addZYLToMetaMask}
+                        className="w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 transform bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white hover:scale-105"
+                      >
+                        <div className="flex items-center justify-center space-x-2">
+                          <Plus className="w-5 h-5" />
+                          <span>Add ZYL to MetaMask</span>
+                        </div>
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
