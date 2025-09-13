@@ -81,6 +81,8 @@ export const useFaucet = () => {
     args: address ? [address] : undefined,
     watch: true,
     enabled: !!address && !!tokenAddress,
+    cacheTime: 0, // Disable caching to ensure fresh data
+    staleTime: 0, // Consider data stale immediately
   });
 
   // Read last request time from contract
@@ -174,10 +176,21 @@ export const useFaucet = () => {
         setLastRequestTime(Date.now());
         
         // Refresh balance and cooldown data after successful transaction
+        // Multiple refresh attempts to ensure data updates
         setTimeout(() => {
           refetchBalance();
           refetchLastRequestTime();
-        }, 2000); // Wait 2 seconds for blockchain to update
+        }, 1000); // First refresh after 1 second
+        
+        setTimeout(() => {
+          refetchBalance();
+          refetchLastRequestTime();
+        }, 3000); // Second refresh after 3 seconds
+        
+        setTimeout(() => {
+          refetchBalance();
+          refetchLastRequestTime();
+        }, 5000); // Third refresh after 5 seconds
         
         // Clear success message after 10 seconds
         setTimeout(() => setSuccess(null), 10000);
@@ -234,10 +247,21 @@ export const useFaucet = () => {
         setLastRequestTime(Date.now());
         
         // Refresh balance and cooldown data after successful transaction
+        // Multiple refresh attempts to ensure data updates
         setTimeout(() => {
           refetchBalance();
           refetchLastRequestTime();
-        }, 2000); // Wait 2 seconds for blockchain to update
+        }, 1000); // First refresh after 1 second
+        
+        setTimeout(() => {
+          refetchBalance();
+          refetchLastRequestTime();
+        }, 3000); // Second refresh after 3 seconds
+        
+        setTimeout(() => {
+          refetchBalance();
+          refetchLastRequestTime();
+        }, 5000); // Third refresh after 5 seconds
         
         // Clear success message after 10 seconds
         setTimeout(() => setSuccess(null), 10000);
