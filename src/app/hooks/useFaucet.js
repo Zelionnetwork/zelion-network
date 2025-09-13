@@ -150,19 +150,16 @@ export const useFaucet = () => {
     setSuccess(null);
 
     try {
-      // ZYL Token address on Arbitrum Sepolia
-      const ZYL_TOKEN = '0xd873a2649c7e1e020C2249A4aaaA248eC02d837B';
-      const requestAmount = parseEther('100'); // 100 ZYL tokens with 18 decimals
+      // For this faucet, we just call requestTokens() with no parameters
+      // The faucet has the ZYL token hardcoded internally
+      console.log('Requesting tokens from faucet:', faucetAddress);
       
-      // Request ZYL tokens from faucet
-      // The contract will handle cooldown validation
       const hash = await walletClient.writeContract({
         address: faucetAddress,
         abi: FAUCET_ABI,
         functionName: 'requestTokens',
-        args: [ZYL_TOKEN, requestAmount],
-        value: 0n, // Explicitly set value to 0 to avoid sending ETH
-        gas: 200000n, // Set reasonable gas limit
+        args: [],
+        gas: 300000n, // Increased gas limit
       });
 
       // Wait for transaction confirmation
