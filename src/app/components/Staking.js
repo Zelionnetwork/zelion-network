@@ -27,7 +27,7 @@ import {
 
 // Deployed contract addresses on Arbitrum Sepolia (Jan 3, 2025)
 const TOKEN_CONFIG = {
-  address: '0xB3F18c487c020A0EfD0dae6F1EDDbE24fcc757D0',
+  address: '0xd873a2649c7e1e020C2249A4aaaA248eC02d837B',
   symbol: 'ZYL',
   decimals: 18
 };

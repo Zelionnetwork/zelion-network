@@ -43,7 +43,7 @@ class SwapService {
         USDC: '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d', // Testnet USDC
         USDT: '0x2B5AD5c4795c026514f8317c7a215E218DcCD6cF', // Testnet USDT
         DAI: '0x6D0F8D488B669aa9BA2D0f0b7B75a88bf5051CD3', // Testnet DAI
-        ZYL: '0xB3F18c487c020A0EfD0dae6F1EDDbE24fcc757D0', // Deployed ZYL Token
+        ZYL: '0xd873a2649c7e1e020C2249A4aaaA248eC02d837B', // Deployed ZYL Token
       },
       // Polygon
       137: {

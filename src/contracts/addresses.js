@@ -7,8 +7,8 @@ export const CONTRACT_ADDRESSES = {
     Staking: null // Not deployed on mainnet yet
   },
   421614: { // Arbitrum Sepolia
-    ZYLToken: "0xB3F18c487c020A0EfD0dae6F1EDDbE24fcc757D0", // Deployed Jan 3, 2025
-    Faucet: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", // Funded with 1M ZYL
+    ZYLToken: "0xd873a2649c7e1e020C2249A4aaaA248eC02d837B", // Deployed Jan 3, 2025
+    Faucet: "0x8a6C94172763Bb4a6484B337779Ca5f0dBF33778", // New working faucet with 100K ZYL
     SimpleSwap: "0x21CaA57210f7DFe710B25dCD78E6D753Cd17877a",
     Staking: "0xC5E05EBA99784b00Dd0244c0E47A4DAe79F2eF72"
   },
@@ -31,7 +31,7 @@ export const TOKEN_ADDRESSES = {
     DAI: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1" // Arbitrum mainnet DAI
   },
   421614: { // Arbitrum Sepolia
-    ZYL: "0xB3F18c487c020A0EfD0dae6F1EDDbE24fcc757D0", // ZYL token deployed Jan 3, 2025
+    ZYL: "0xd873a2649c7e1e020C2249A4aaaA248eC02d837B", // ZYL token deployed Jan 3, 2025
     ETH: "0x0000000000000000000000000000000000000000",
     WETH: "0xC2a7E1Cc6C58b21d088d1c826Acc19EB639B5a41",
     USDC: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
