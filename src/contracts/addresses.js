@@ -10,7 +10,7 @@ export const CONTRACT_ADDRESSES = {
     ZYLToken: "0xd873a2649c7e1e020C2249A4aaaA248eC02d837B", // Deployed Jan 3, 2025
     Faucet: "0x8a6C94172763Bb4a6484B337779Ca5f0dBF33778", // New working faucet with 100K ZYL
     SimpleSwap: "0x21CaA57210f7DFe710B25dCD78E6D753Cd17877a",
-    Staking: "0xC5E05EBA99784b00Dd0244c0E47A4DAe79F2eF72"
+    Staking: "0xa88b8DC7B37133AF6a34Cb0f3C9354ff3a07ba70" // Fixed staking contract
   },
   80002: { // Polygon Amoy
     ZYLToken: "0xAeeEe926B74039C0B7E37A2139d18DCa9edBd0f3",

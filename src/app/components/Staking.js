@@ -33,7 +33,7 @@ const TOKEN_CONFIG = {
 };
 
 const STAKING_CONTRACT = {
-  address: '0xC5E05EBA99784b00Dd0244c0E47A4DAe79F2eF72',
+  address: '0xa88b8DC7B37133AF6a34Cb0f3C9354ff3a07ba70',
   chainId: 421614, // Arbitrum Sepolia
   abi: [
     {
