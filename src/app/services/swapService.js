@@ -39,7 +39,7 @@ class SwapService {
       // Arbitrum Sepolia
       421614: {
         ETH: '0x0000000000000000000000000000000000000000', // Native ETH
-        WETH: '0xC2a7E1Cc6C58b21d088d1c826Acc19EB639B5a41', // Sepolia WETH
+        WETH: '0x980b62da83eff3d4576c647993b0c1d7faf17c73', // Arbitrum Sepolia WETH
         USDC: '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d', // Testnet USDC
         USDT: '0x2B5AD5c4795c026514f8317c7a215E218DcCD6cF', // Testnet USDT
         DAI: '0x6D0F8D488B669aa9BA2D0f0b7B75a88bf5051CD3', // Testnet DAI
