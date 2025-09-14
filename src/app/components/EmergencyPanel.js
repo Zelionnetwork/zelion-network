@@ -7,7 +7,7 @@ export default function EmergencyPanel() {
   const { address, isConnected } = useAccount();
   const [isPaused, setIsPaused] = useState(false);
 
-  const adminAddress = '0x07B2CfBe1bd51325a8bFbE9399AAB494420111E1'.toLowerCase(); // 🔒 Replace if needed
+  const adminAddress = '0x07B2CfBe1bd51325a8bFbE9399AAB494420111E1'.toLowerCase();
   const isAdmin = isConnected && address?.toLowerCase() === adminAddress;
 
   const handlePause = () => {
@@ -44,7 +44,7 @@ export default function EmergencyPanel() {
           <button
             onClick={handlePause}
             disabled={isPaused}
-            className="btn-zelion w-full sm:w-auto bg-red-500 hover:bg-red-400 disabled:opacity-50"
+            className="btn-zelion w-full sm:w-auto bg-red-500 hover:bg-red-400 disabled:opacity-50 lg:text-base text-sm"
           >
             Pause Contract
           </button>
@@ -52,14 +52,14 @@ export default function EmergencyPanel() {
           <button
             onClick={handleUnpause}
             disabled={!isPaused}
-            className="btn-zelion w-full sm:w-auto bg-green-500 hover:bg-green-400 text-black disabled:opacity-50"
+            className="btn-zelion w-full sm:w-auto bg-green-500 hover:bg-green-400 text-black disabled:opacity-50 lg:text-base text-sm"
           >
             Unpause Contract
           </button>
 
           <button
             onClick={handleWithdraw}
-            className="btn-zelion w-full sm:w-auto"
+            className="btn-zelion w-full sm:w-auto lg:text-base text-sm"
           >
             Withdraw ETH
           </button>
