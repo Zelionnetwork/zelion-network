@@ -309,19 +309,10 @@ export default function Staking() {
     }
   }, [isClaimSuccess, refetchBalance, refetchPendingRewards]);
 
-  // Calculate APY based on contract's reward rate (100 basis points = 1% per day)
+  // Calculate APY - Fixed at 8% annual yield
   const calculateAPY = () => {
-    if (!rewardRate) return 0;
-    try {
-      // rewardRate is 100 basis points (1% per day)
-      // Convert basis points to percentage: 100 / 10000 = 0.01 (1%)
-      const dailyRate = Number(rewardRate) / 10000; // 100 / 10000 = 0.01
-      // Annual rate: (1 + dailyRate)^365 - 1
-      const annualRate = Math.pow(1 + dailyRate, 365) - 1;
-      return (annualRate * 100).toFixed(2);
-    } catch {
-      return 0;
-    }
+    // Fixed 8% annual yield regardless of contract reward rate
+    return "8.00";
   };
 
   // Handle approval
